@@ -1,0 +1,15 @@
+/// 공지사항
+model Notice {
+  id        Int       @id @default(autoincrement())
+  title     String
+  content   String
+  isExposed Boolean   @default(false)
+  isPinned  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  imageURL  String?
+  fileUrl   String?
+  authorId  Int       @default(1)
+  author    Admin     @relation(fields: [authorId], references: [id])
+}

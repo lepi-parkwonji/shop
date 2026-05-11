@@ -1,0 +1,13 @@
+/// FAQ
+model Faq {
+  id        Int       @id @default(autoincrement())
+  question  String
+  answer    String
+  isExposed Boolean   @default(false)
+  isPinned  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  authorId  Int       @default(1)
+  author    Admin     @relation(fields: [authorId], references: [id])
+}

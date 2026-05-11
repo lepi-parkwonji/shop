@@ -1,0 +1,30 @@
+import { Component } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-customer-service',
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  template: `
+    <div class="max-w-4xl mx-auto px-4 py-8 lg:px-0">
+      <h1 class="text-2xl font-bold mb-6">고객센터</h1>
+
+      <div role="tablist" class="tabs tabs-border mb-6">
+        <a
+          role="tab"
+          class="tab"
+          routerLink="notice"
+          routerLinkActive="tab-active"
+        >공지사항</a>
+        <a
+          role="tab"
+          class="tab"
+          routerLink="faq"
+          routerLinkActive="tab-active"
+        >FAQ</a>
+      </div>
+
+      <router-outlet />
+    </div>
+  `,
+})
+export class CustomerServiceComponent {}

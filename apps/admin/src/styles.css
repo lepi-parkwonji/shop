@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+
+@plugin "daisyui" {
+  themes: light --default;
+}
+
+@theme {
+  --color-primary: oklch(0.695 0.201 258.1);
+  --color-primary-50: oklch(0.98 0.02 258.1);
+  --color-primary-100: oklch(0.94 0.05 258.1);
+  --color-primary-200: oklch(0.87 0.1 258.1);
+  --color-primary-300: oklch(0.78 0.15 258.1);
+  --color-primary-400: oklch(0.73 0.18 258.1);
+  --color-primary-500: oklch(0.695 0.201 258.1);
+  --color-primary-600: oklch(0.62 0.18 258.1);
+  --color-primary-700: oklch(0.52 0.15 258.1);
+  --color-primary-800: oklch(0.42 0.12 258.1);
+  --color-primary-900: oklch(0.32 0.1 258.1);
+}
+
+* {
+  letter-spacing: -0.04em;
+  outline: none;
+}
