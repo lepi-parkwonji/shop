@@ -8,6 +8,3 @@ model Admin {
   notices     Notice[]
 }
 
-enum AdminRole {
-  // 관리자
-}

@@ -26,6 +26,8 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
+      # nx run-many 실행 전에 Prisma Client 생성
+      - run: npx prisma generate
 
       # This enables task distribution via Nx Cloud
       # Run this command as early as possible, after dependencies are installed
