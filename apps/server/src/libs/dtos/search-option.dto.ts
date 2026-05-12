@@ -6,13 +6,13 @@ export class OffsetSearchOptionDTO {
   @IsInt()
   @Min(1)
   @Type(() => Number)
-  pageNo: number = 1;
+  pageNo = 1;
 
   @IsOptional()
   @IsInt()
   @Min(1)
   @Type(() => Number)
-  pageSize: number = 10;
+  pageSize = 10;
 
   @IsOptional()
   @IsString()
