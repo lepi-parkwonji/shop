@@ -2,12 +2,16 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaqApiService, FaqDTO } from '../../../services/faq-api.service';
+import { ToastService } from '../../../services/toast.service';
+
+const QUESTION_MAX = 200;
+const ANSWER_MAX = 2000;
 
 @Component({
   selector: 'app-faq-form',
   imports: [FormsModule],
   template: `
-    <div class="max-w-2xl">
+    <div class="w-full max-w-4xl">
       <div class="mb-5">
         <h2 class="text-xl font-bold">{{ isEdit ? 'FAQ 수정' : 'FAQ 등록' }}</h2>
       </div>
@@ -15,18 +19,34 @@ import { FaqApiService, FaqDTO } from '../../../services/faq-api.service';
       <div class="card bg-base-100 shadow-sm">
         <div class="card-body gap-4">
           <label class="form-control">
-            <div class="label"><span class="label-text font-medium">질문 *</span></div>
+            <div class="label">
+              <span class="label-text font-medium">질문 *</span>
+              <span class="label-text-alt" [class.text-error]="question.length >= QUESTION_MAX">
+                {{ question.length }} / {{ QUESTION_MAX }}
+              </span>
+            </div>
             <input
               class="input input-bordered w-full"
-              type="text" [(ngModel)]="question" placeholder="질문을 입력하세요"
+              type="text"
+              [(ngModel)]="question"
+              placeholder="질문을 입력하세요"
+              [maxlength]="QUESTION_MAX"
             />
           </label>
 
           <label class="form-control">
-            <div class="label"><span class="label-text font-medium">답변 *</span></div>
+            <div class="label">
+              <span class="label-text font-medium">답변 *</span>
+              <span class="label-text-alt" [class.text-error]="answer.length >= ANSWER_MAX">
+                {{ answer.length }} / {{ ANSWER_MAX }}
+              </span>
+            </div>
             <textarea
-              class="textarea textarea-bordered w-full min-h-40"
-              [(ngModel)]="answer" placeholder="답변을 입력하세요"
+              class="textarea textarea-bordered w-full font-mono text-sm leading-relaxed"
+              style="min-height: 30rem; resize: vertical;"
+              [(ngModel)]="answer"
+              placeholder="답변을 입력하세요"
+              [maxlength]="ANSWER_MAX"
             ></textarea>
           </label>
 
@@ -48,7 +68,11 @@ import { FaqApiService, FaqDTO } from '../../../services/faq-api.service';
 export class FaqFormComponent implements OnInit {
   private faqApi = inject(FaqApiService);
   private route = inject(ActivatedRoute);
+  private toast = inject(ToastService);
   router = inject(Router);
+
+  readonly QUESTION_MAX = QUESTION_MAX;
+  readonly ANSWER_MAX = ANSWER_MAX;
 
   question = '';
   answer = '';
@@ -64,14 +88,12 @@ export class FaqFormComponent implements OnInit {
     this.isEdit = true;
     this.faqId = +id;
 
-    // 리스트에서 navigation state로 넘긴 데이터로 즉시 채움
     const state = history.state as { faq?: FaqDTO } | undefined;
     if (state?.faq) {
       this.question = state.faq.question;
       this.answer = state.faq.answer;
     }
 
-    // API로 최신 데이터 재확인
     this.faqApi.findOne(this.faqId).subscribe({
       next: (f) => {
         this.question = f.question;
@@ -99,7 +121,10 @@ export class FaqFormComponent implements OnInit {
       : this.faqApi.create({ question: this.question, answer: this.answer });
 
     req.subscribe({
-      next: () => this.router.navigate(['/customer/faq']),
+      next: () => {
+        this.toast.success(this.isEdit ? 'FAQ가 수정되었습니다.' : 'FAQ가 등록되었습니다.');
+        this.router.navigate(['/customer/faq']);
+      },
       error: (err) => {
         console.error('[faq save]', err);
         const status = err?.status;

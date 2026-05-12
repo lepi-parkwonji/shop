@@ -2,12 +2,16 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NoticeApiService, NoticeDTO } from '../../../services/notice-api.service';
+import { ToastService } from '../../../services/toast.service';
+
+const TITLE_MAX = 100;
+const CONTENT_MAX = 2000;
 
 @Component({
   selector: 'app-notice-form',
   imports: [FormsModule],
   template: `
-    <div class="max-w-2xl">
+    <div class="w-full max-w-4xl">
       <div class="mb-5">
         <h2 class="text-xl font-bold">{{ isEdit ? '공지사항 수정' : '공지사항 등록' }}</h2>
       </div>
@@ -15,18 +19,34 @@ import { NoticeApiService, NoticeDTO } from '../../../services/notice-api.servic
       <div class="card bg-base-100 shadow-sm">
         <div class="card-body gap-4">
           <label class="form-control">
-            <div class="label"><span class="label-text font-medium">제목 *</span></div>
+            <div class="label">
+              <span class="label-text font-medium">제목 *</span>
+              <span class="label-text-alt" [class.text-error]="title.length >= TITLE_MAX">
+                {{ title.length }} / {{ TITLE_MAX }}
+              </span>
+            </div>
             <input
               class="input input-bordered w-full"
-              type="text" [(ngModel)]="title" placeholder="제목을 입력하세요"
+              type="text"
+              [(ngModel)]="title"
+              placeholder="제목을 입력하세요"
+              [maxlength]="TITLE_MAX"
             />
           </label>
 
           <label class="form-control">
-            <div class="label"><span class="label-text font-medium">내용 *</span></div>
+            <div class="label">
+              <span class="label-text font-medium">내용 *</span>
+              <span class="label-text-alt" [class.text-error]="content.length >= CONTENT_MAX">
+                {{ content.length }} / {{ CONTENT_MAX }}
+              </span>
+            </div>
             <textarea
-              class="textarea textarea-bordered w-full min-h-48"
-              [(ngModel)]="content" placeholder="내용을 입력하세요"
+              class="textarea textarea-bordered w-full font-mono text-sm leading-relaxed"
+              style="min-height: 30rem; resize: vertical;"
+              [(ngModel)]="content"
+              placeholder="내용을 입력하세요"
+              [maxlength]="CONTENT_MAX"
             ></textarea>
           </label>
 
@@ -48,7 +68,11 @@ import { NoticeApiService, NoticeDTO } from '../../../services/notice-api.servic
 export class NoticeFormComponent implements OnInit {
   private noticeApi = inject(NoticeApiService);
   private route = inject(ActivatedRoute);
+  private toast = inject(ToastService);
   router = inject(Router);
+
+  readonly TITLE_MAX = TITLE_MAX;
+  readonly CONTENT_MAX = CONTENT_MAX;
 
   title = '';
   content = '';
@@ -64,14 +88,12 @@ export class NoticeFormComponent implements OnInit {
     this.isEdit = true;
     this.noticeId = +id;
 
-    // 리스트에서 navigation state로 넘긴 데이터로 즉시 채움
     const state = history.state as { notice?: NoticeDTO } | undefined;
     if (state?.notice) {
       this.title = state.notice.title;
       this.content = state.notice.content;
     }
 
-    // API로 최신 데이터 재확인 (state 없거나 stale 대비)
     this.noticeApi.findOne(this.noticeId).subscribe({
       next: (n) => {
         this.title = n.title;
@@ -99,7 +121,10 @@ export class NoticeFormComponent implements OnInit {
       : this.noticeApi.create({ title: this.title, content: this.content });
 
     req.subscribe({
-      next: () => this.router.navigate(['/customer/notice']),
+      next: () => {
+        this.toast.success(this.isEdit ? '공지사항이 수정되었습니다.' : '공지사항이 등록되었습니다.');
+        this.router.navigate(['/customer/notice']);
+      },
       error: (err) => {
         console.error('[notice save]', err);
         const status = err?.status;

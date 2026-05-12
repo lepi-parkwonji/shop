@@ -2,7 +2,12 @@
   "name": "@org/source",
   "version": "0.0.0",
   "license": "MIT",
+  "packageManager": "npm@11.12.1",
   "scripts": {
+    "lint": "nx run-many -t lint",
+    "test": "nx run-many -t test",
+    "build": "nx run-many -t build",
+    "typecheck": "nx run-many -t typecheck",
     "db:generate": "dotenv -e apps/server/.env -- prisma generate",
     "db:push": "dotenv -e apps/server/.env -- prisma db push",
     "db:migrate": "dotenv -e apps/server/.env -- prisma migrate dev",
