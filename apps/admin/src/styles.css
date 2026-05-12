@@ -16,9 +16,20 @@
   --color-primary-700: oklch(0.52 0.15 258.1);
   --color-primary-800: oklch(0.42 0.12 258.1);
   --color-primary-900: oklch(0.32 0.1 258.1);
+
+  /* 버튼 라운드 통일 */
+  --radius-btn: 0.375rem;
+  /* 인풋/카드 라운드 통일 */
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
 }
 
 * {
   letter-spacing: -0.04em;
   outline: none;
+}
+
+/* 테이블 내 버튼 폰트 크기 통일 */
+.table .btn-xs {
+  font-size: 0.75rem;
 }

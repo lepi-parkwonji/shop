@@ -1,19 +1,23 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaqDTO, PaginatedResult, PublicApiService } from '../../../services/public-api.service';
+import { PaginationComponent } from '../../../shared/pagination.component';
 
 @Component({
   selector: 'app-faq-list',
-  imports: [FormsModule],
+  imports: [FormsModule, PaginationComponent],
   template: `
     <div>
       <div class="flex gap-2 mb-4">
         <input
-          class="input input-bordered flex-1 input-sm"
-          type="text" [(ngModel)]="query" placeholder="질문 또는 답변 검색"
-          (keydown.enter)="onSearch()"
+          class="input input-bordered flex-1 input-sm min-w-0"
+          type="text"
+          [(ngModel)]="query"
+          placeholder="질문 또는 답변 검색"
+          (ngModelChange)="onQueryChange()"
+          (keydown.enter)="onSearchImmediate()"
         />
-        <button class="btn btn-neutral btn-sm" (click)="onSearch()">검색</button>
+        <button class="btn btn-outline btn-sm shrink-0" (click)="onSearchImmediate()">검색</button>
       </div>
 
       <div class="card bg-base-100 shadow-sm">
@@ -40,31 +44,37 @@ import { FaqDTO, PaginatedResult, PublicApiService } from '../../../services/pub
       </div>
 
       @if (result(); as r) {
-        @if (r.pageInfo.totalPages > 1) {
-          <div class="flex justify-center items-center gap-4 mt-4">
-            <button class="btn btn-sm btn-ghost" [disabled]="pageNo() <= 1" (click)="changePage(pageNo() - 1)">이전</button>
-            <span class="text-sm">{{ pageNo() }} / {{ r.pageInfo.totalPages }}</span>
-            <button class="btn btn-sm btn-ghost" [disabled]="pageNo() >= r.pageInfo.totalPages" (click)="changePage(pageNo() + 1)">다음</button>
-          </div>
-        }
+        <app-pagination
+          [pageNo]="pageNo()"
+          [totalPages]="r.pageInfo.totalPages"
+          [totalItems]="r.pageInfo.totalItems"
+          (pageChange)="changePage($event)"
+        />
       }
     </div>
   `,
 })
-export class FaqListComponent implements OnInit {
+export class FaqListComponent implements OnInit, OnDestroy {
   private api = inject(PublicApiService);
 
   result = signal<PaginatedResult<FaqDTO> | null>(null);
   pageNo = signal(1);
   query = '';
+  private searchTimer?: ReturnType<typeof setTimeout>;
 
   ngOnInit() { this.load(); }
+  ngOnDestroy() { clearTimeout(this.searchTimer); }
 
   load() {
     this.api.searchFaqs(this.pageNo(), 20, this.query || undefined)
       .subscribe(r => this.result.set(r));
   }
 
-  onSearch() { this.pageNo.set(1); this.load(); }
+  onQueryChange() {
+    clearTimeout(this.searchTimer);
+    this.searchTimer = setTimeout(() => { this.pageNo.set(1); this.load(); }, 400);
+  }
+
+  onSearchImmediate() { clearTimeout(this.searchTimer); this.pageNo.set(1); this.load(); }
   changePage(page: number) { this.pageNo.set(page); this.load(); }
 }
