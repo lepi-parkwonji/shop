@@ -2,6 +2,7 @@
   "name": "@org/source",
   "version": "0.0.0",
   "license": "MIT",
+  "packageManager": "npm@11.12.1",
   "scripts": {
     "db:generate": "dotenv -e apps/server/.env -- prisma generate",
     "db:push": "dotenv -e apps/server/.env -- prisma db push",
