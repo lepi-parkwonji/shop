@@ -53,3 +53,11 @@ vitest.config.*.timestamp*
 .nx/polygraph
 .nx/self-healing
 /generated/prisma
+
+# environment variables
+apps/server/.env
+.env
+.env.*
+
+# cursor IDE
+.cursor/

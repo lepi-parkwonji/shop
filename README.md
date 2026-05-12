@@ -1,65 +1,28 @@
-# Nx Angular Repository
+# demo-shop
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+Nx 모노레포 기반의 쇼핑몰 관리 시스템입니다.
 
-✨ A repository showcasing key [Nx](https://nx.dev) features for Angular monorepos ✨
-🚀 If you haven't connected to Nx Cloud yet, [complete your setup here](https://cloud.nx.app/setup/connect-workspace/guide). Get faster builds with remote caching, distributed task execution, and self-healing CI. [See how your workspace can benefit](#nx-cloud).
-## 📦 Project Overview
+## 기술 스택
 
-This repository demonstrates a production-ready Angular monorepo with:
+| 영역 | 기술 |
+|---|---|
+| 모노레포 | Nx |
+| 백엔드 | NestJS, Prisma 7, PostgreSQL |
+| 프론트엔드 | Angular 21, Tailwind CSS 4, DaisyUI 5 |
+| 인증 | JWT (accessToken 1h / refreshToken 7d), bcrypt |
 
-- **2 Applications**
+## 프로젝트 구조
 
-  - `shop` - Angular e-commerce application with product listings and detail views
-  - `api` - Backend API with Docker support serving product data
-
-- **6 Libraries**
-
-  - `@org/feature-products` - Product listing feature (Angular)
-  - `@org/feature-product-detail` - Product detail feature (Angular)
-  - `@org/data` - Data access layer for shop features
-  - `@org/shared-ui` - Shared UI components
-  - `@org/models` - Shared data models
-  - `@org/products` - API product service library
-
-- **E2E Testing**
-  - `shop-e2e` - Playwright tests for the shop application
-
-## 🚀 Quick Start
-
-```bash
-# Clone the repository
-git clone <your-fork-url>
-cd <your-repository-name>
-
-# Install dependencies
-# (Note: You may need --legacy-peer-deps)
-npm install
-
-# Serve the Angular shop application (this will simultaneously serve the API backend)
-npx nx serve shop
-
-# ...or you can serve the API separately
-npx nx serve api
-
-# Build all projects
-npx nx run-many -t build
-
-# Run tests
-npx nx run-many -t test
-
-# Lint all projects
-npx nx run-many -t lint
-
-# Run e2e tests
-npx nx e2e shop-e2e
-
-# Run tasks in parallel
-
-npx nx run-many -t lint test build e2e --parallel=3
-
-# Visualize the project graph
-npx nx graph
+```
+apps/
+  server/       — NestJS API 서버 (포트 3000)
+  admin/        — 관리자 패널 (포트 4200)
+  shop/         — 고객 공개 페이지 (포트 4201)
+libs/
+  common/       — 앱 간 공유 인터페이스 (NoticeDTO, FaqDTO, PaginatedResult 등)
+prisma/
+  schema.prisma — DB 스키마
+  seed.ts       — 초기 관리자 계정 생성
 ```
 
 ## ⭐ Featured Nx Capabilities
