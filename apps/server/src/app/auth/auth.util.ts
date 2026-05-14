@@ -19,17 +19,9 @@ export class AuthUtil {
     try {
       return this.jwtService.verify<T>(token);
     } catch (error) {
-      const message = error instanceof Error ? error.message : '';
-      switch (message) {
-        case 'jwt expired':
-          throw new TokenExpiredException();
-        case 'jwt malformed':
-        case 'invalid signature':
-        case 'invalid token':
-          throw new BadRequestException('잘못된 요청입니다.');
-        default:
-          throw new BadRequestException('잘못된 요청입니다.');
-      }
+      if (error instanceof Error && error.message === 'jwt expired')
+        throw new TokenExpiredException();
+      throw new BadRequestException('잘못된 요청입니다.');
     }
   }
 
