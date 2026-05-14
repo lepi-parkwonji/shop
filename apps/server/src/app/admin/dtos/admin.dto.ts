@@ -1,13 +1,9 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 
 @Exclude()
 export class AdminDTO {
-  @Expose()
-  id: number;
-
-  @Expose()
-  usrname: string;
-
-  @Expose()
-  displayName: string;
+  @ApiProperty({ type: Number }) @Expose() id!: number;
+  @ApiProperty({ type: String }) @Expose() usrname!: string;
+  @ApiProperty({ type: String }) @Expose() displayName!: string;
 }

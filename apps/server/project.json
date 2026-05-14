@@ -43,6 +43,13 @@
       "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
       "executor": "nx:noop"
     },
+    "swagger": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/swagger.json"],
+      "options": {
+        "command": "SWAGGER_GEN=true npx tsx --tsconfig apps/server/tsconfig.app.json apps/server/src/generate-swagger.ts"
+      }
+    },
     "serve": {
       "continuous": true,
       "executor": "@nx/js:node",

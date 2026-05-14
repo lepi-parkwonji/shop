@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
+  "input": "swagger.json",
+  "output": "libs/api-client/src",
+  "indexFile": true,
+  "removeStaleFiles": true,
+  "servicePrefix": "",
+  "serviceSuffix": "ApiService",
+  "modelPrefix": "",
+  "modelSuffix": "",
+  "ignoreUnusedModels": false
+}

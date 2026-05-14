@@ -5,6 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { NoticeModule } from './notice/notice.module';
 import { FaqModule } from './faq/faq.module';
+import { InquiryModule } from './inquiry/inquiry.module';
+import { GalleryModule } from './gallery/gallery.module';
 import { PublicModule } from './public/public.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -20,6 +22,8 @@ import { AppService } from './app.service';
     AdminModule,
     NoticeModule,
     FaqModule,
+    InquiryModule,
+    GalleryModule,
     PublicModule,
   ],
   controllers: [AppController],

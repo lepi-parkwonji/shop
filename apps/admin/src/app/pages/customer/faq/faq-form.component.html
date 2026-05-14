@@ -6,7 +6,7 @@
   <div class="card bg-base-100 shadow-sm">
     <div class="card-body gap-4">
       <label class="form-control">
-        <div class="label">
+        <div class="label px-0 pb-2">
           <span class="label-text font-medium">질문 *</span>
           <span class="label-text-alt" [class.text-error]="question.length >= QUESTION_MAX">
             {{ question.length }} / {{ QUESTION_MAX }}
@@ -22,7 +22,7 @@
       </label>
 
       <label class="form-control">
-        <div class="label">
+        <div class="label px-0 pb-2">
           <span class="label-text font-medium">답변 *</span>
           <span class="label-text-alt" [class.text-error]="answer.length >= ANSWER_MAX">
             {{ answer.length }} / {{ ANSWER_MAX }}
