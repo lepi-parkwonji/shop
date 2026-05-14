@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { FaqDTO, PaginatedResult } from '@demo-shop/common';
+import { FaqResponseDto as FaqDTO } from '@demo-shop/api-client';
+import { PaginatedResult } from '@demo-shop/common';
 
 export type { FaqDTO };
 

@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateChildFn, CanActivateFn, Router } from '@angular/router';
 import { AdminStore } from '../stores/admin.store';
 
-export const authGuard: CanActivateFn = async () => {
+const checkAuth = async () => {
   const adminStore = inject(AdminStore);
   const router = inject(Router);
 
@@ -13,3 +13,6 @@ export const authGuard: CanActivateFn = async () => {
 
   return router.createUrlTree(['/sign-in']);
 };
+
+export const authGuard: CanActivateFn = checkAuth;
+export const authGuardChild: CanActivateChildFn = checkAuth;

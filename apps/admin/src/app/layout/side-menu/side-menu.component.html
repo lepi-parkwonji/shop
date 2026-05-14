@@ -1,0 +1,18 @@
+<nav class="w-56 min-h-full bg-neutral text-neutral-content pt-4 pl-4 pr-2">
+  @for (menu of menus; track menu.name) {
+    <div class="mb-2">
+      <p class="px-5 py-2 text-sm font-semibold uppercase tracking-wider text-neutral-content/90">
+        {{ menu.name }}
+      </p>
+      <div class="ml-5 border-l border-neutral-content/20">
+        @for (child of menu.children; track child.href) {
+          <a
+            [routerLink]="child.href"
+            routerLinkActive="bg-neutral-focus font-medium"
+            class="block pl-4 pr-3 py-2.5 text-sm text-neutral-content/70 hover:bg-neutral-focus hover:text-neutral-content transition-colors"
+          >{{ child.name }}</a>
+        }
+      </div>
+    </div>
+  }
+</nav>

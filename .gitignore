@@ -61,3 +61,6 @@ apps/server/.env
 
 # cursor IDE
 .cursor/
+
+# uploaded files (runtime)
+/uploads/

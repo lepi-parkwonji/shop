@@ -26,7 +26,7 @@
             <th class="w-14">번호</th>
             <th>제목</th>
             <th class="w-28 text-center">고정</th>
-            <th class="w-24 text-center">노출</th>
+            <th class="w-24 text-center">공개</th>
             <th class="w-28 hidden sm:table-cell">작성일</th>
             <th class="w-20 text-center">관리</th>
           </tr>
@@ -52,7 +52,7 @@
                   class="btn btn-xs whitespace-nowrap"
                   [ngClass]="item.isExposed ? 'btn-success' : 'btn-outline btn-success'"
                   (click)="toggleExpose(item)"
-                >{{ item.isExposed ? '노출' : '숨김' }}</button>
+                >{{ item.isExposed ? '공개' : '비공개' }}</button>
               </td>
               <td class="text-sm text-base-content/60 hidden sm:table-cell whitespace-nowrap">{{ item.createdAt | slice:0:10 }}</td>
               <td class="text-center">
