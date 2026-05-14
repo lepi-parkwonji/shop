@@ -2,8 +2,14 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { AuthUtil } from '../auth.util';
 import { Request } from 'express';
 
+export interface JwtPayload {
+  sub: number;
+  iat: number;
+  exp: number;
+}
+
 interface AuthRequest extends Request {
-  admin?: unknown;
+  admin?: JwtPayload;
 }
 
 @Injectable()
@@ -14,7 +20,7 @@ export class JwtAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest() as AuthRequest;
     const token = this.authUtil.extractAccessTokenFromHeader(request);
     if (!token) throw new UnauthorizedException();
-    const payload = this.authUtil.verifyToken(token);
+    const payload = this.authUtil.verifyToken<JwtPayload>(token);
     request['admin'] = payload;
     return true;
   }

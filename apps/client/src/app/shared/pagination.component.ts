@@ -21,15 +21,15 @@ import { Component, computed, input, output } from '@angular/core';
             title="이전 페이지"
           >‹</button>
 
-          @for (p of pages(); track $index) {
-            @if (p === null) {
+          @for (page of pages(); track $index) {
+            @if (page === null) {
               <button class="join-item btn btn-sm btn-ghost pointer-events-none" disabled>…</button>
             } @else {
               <button
                 class="join-item btn btn-sm"
-                [ngClass]="p === pageNo() ? 'btn-primary' : 'btn-ghost'"
-                (click)="go(p)"
-              >{{ p }}</button>
+                [ngClass]="page === pageNo() ? 'btn-primary' : 'btn-ghost'"
+                (click)="go(page)"
+              >{{ page }}</button>
             }
           }
 
@@ -62,7 +62,7 @@ export class PaginationComponent {
     const current = this.pageNo();
 
     if (total <= 7) {
-      return Array.from({ length: total }, (_, i) => i + 1);
+      return Array.from({ length: total }, (_, index) => index + 1);
     }
 
     const result: (number | null)[] = [1];
@@ -71,7 +71,7 @@ export class PaginationComponent {
     const rangeEnd = Math.min(total - 1, current + 2);
 
     if (rangeStart > 2) result.push(null);
-    for (let i = rangeStart; i <= rangeEnd; i++) result.push(i);
+    for (let page = rangeStart; page <= rangeEnd; page++) result.push(page);
     if (rangeEnd < total - 1) result.push(null);
 
     result.push(total);

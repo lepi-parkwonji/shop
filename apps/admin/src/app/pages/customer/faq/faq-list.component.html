@@ -1,0 +1,78 @@
+<div class="w-full max-w-4xl">
+  <div class="flex justify-between items-center mb-5">
+    <h2 class="text-xl font-bold">FAQ</h2>
+    <button class="btn btn-primary btn-sm" (click)="navigateToNew()">
+      + 등록
+    </button>
+  </div>
+
+  <div class="flex gap-2 mb-4">
+    <input
+      class="input input-bordered flex-1 input-sm min-w-0"
+      type="text"
+      [ngModel]="query()"
+      (ngModelChange)="onQueryChange($event)"
+      placeholder="질문 또는 답변 검색"
+      (keydown.enter)="onSearchImmediate()"
+    />
+    <button class="btn btn-outline btn-sm shrink-0" (click)="onSearchImmediate()">검색</button>
+  </div>
+
+  <div class="card bg-base-100 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="table table-zebra table-fixed w-full">
+        <thead>
+          <tr>
+            <th class="w-14">번호</th>
+            <th>질문</th>
+            <th class="w-28 text-center">고정</th>
+            <th class="w-24 text-center">노출</th>
+            <th class="w-28 hidden sm:table-cell">작성일</th>
+            <th class="w-20 text-center">관리</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of result()?.items; track item.id; let idx = $index) {
+            <tr>
+              <td class="text-sm text-base-content/50">{{ rowNumber(idx) }}</td>
+              <td
+                class="cursor-pointer text-primary hover:underline truncate max-w-0"
+                (click)="navigateToEdit(item)"
+                [title]="item.question"
+              >{{ item.question }}</td>
+              <td class="text-center">
+                <button
+                  class="btn btn-xs whitespace-nowrap"
+                  [ngClass]="item.isPinned ? 'btn-warning' : 'btn-outline btn-warning'"
+                  (click)="togglePin(item)"
+                >{{ item.isPinned ? '고정' : '고정안함' }}</button>
+              </td>
+              <td class="text-center">
+                <button
+                  class="btn btn-xs whitespace-nowrap"
+                  [ngClass]="item.isExposed ? 'btn-success' : 'btn-outline btn-success'"
+                  (click)="toggleExpose(item)"
+                >{{ item.isExposed ? '노출' : '숨김' }}</button>
+              </td>
+              <td class="text-sm text-base-content/60 hidden sm:table-cell whitespace-nowrap">{{ item.createdAt | slice:0:10 }}</td>
+              <td class="text-center">
+                <button class="btn btn-xs btn-error btn-outline whitespace-nowrap" (click)="remove(item)">삭제</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="text-center text-base-content/40 py-10">등록된 FAQ가 없습니다.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  @if (result(); as pagedResult) {
+    <app-pagination
+      [pageNo]="pageNo()"
+      [totalPages]="pagedResult.pageInfo.totalPages"
+      [totalItems]="pagedResult.pageInfo.totalItems"
+      (pageChange)="changePage($event)"
+    />
+  }
+</div>

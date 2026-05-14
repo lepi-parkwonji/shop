@@ -1,20 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, Notice } from '@generated/prisma';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OffsetPaginationDTO } from '../../libs/dtos/offset-pagination.dto';
 import { OffsetSearchOptionDTO } from '../../libs/dtos/search-option.dto';
 import { CreateNoticeDTO } from './dtos/create-notice.dto';
 import { UpdateNoticeDTO } from './dtos/update-notice.dto';
-import { SearchNoticeDTO } from './dtos/search-notice.dto';
+
+const SYSTEM_AUTHOR_ID = 1;
 
 @Injectable()
 export class NoticeService {
   constructor(private prisma: PrismaService) {}
 
-  async search(dto: SearchNoticeDTO): Promise<OffsetPaginationDTO<object>> {
-    const { pageNo, pageSize, query } = dto;
-    const skip = (pageNo - 1) * pageSize;
-
-    const where = {
+  private buildSearchWhere(query?: string): Prisma.NoticeWhereInput {
+    return {
       deletedAt: null,
       ...(query && {
         OR: [
@@ -23,7 +22,14 @@ export class NoticeService {
         ],
       }),
     };
+  }
 
+  private async paginate(
+    where: Prisma.NoticeWhereInput,
+    pageNo: number,
+    pageSize: number,
+  ): Promise<OffsetPaginationDTO<Notice>> {
+    const skip = (pageNo - 1) * pageSize;
     const [totalItems, items] = await Promise.all([
       this.prisma.notice.count({ where }),
       this.prisma.notice.findMany({
@@ -33,16 +39,20 @@ export class NoticeService {
         orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
       }),
     ]);
-
     return {
       items,
-      pageInfo: {
-        pageNo,
-        pageSize,
-        totalItems,
-        totalPages: Math.ceil(totalItems / pageSize),
-      },
+      pageInfo: { pageNo, pageSize, totalItems, totalPages: Math.ceil(totalItems / pageSize) },
     };
+  }
+
+  async search(dto: OffsetSearchOptionDTO): Promise<OffsetPaginationDTO<Notice>> {
+    const { pageNo, pageSize, query } = dto;
+    return this.paginate(this.buildSearchWhere(query), pageNo, pageSize);
+  }
+
+  async searchPublic(dto: OffsetSearchOptionDTO): Promise<OffsetPaginationDTO<Notice>> {
+    const { pageNo, pageSize, query } = dto;
+    return this.paginate({ ...this.buildSearchWhere(query), isExposed: true }, pageNo, pageSize);
   }
 
   async findOne(id: number) {
@@ -51,8 +61,16 @@ export class NoticeService {
     return notice;
   }
 
+  async findOnePublic(id: number) {
+    const notice = await this.prisma.notice.findFirst({
+      where: { id, deletedAt: null, isExposed: true },
+    });
+    if (!notice) throw new NotFoundException('공지사항을 찾을 수 없습니다.');
+    return notice;
+  }
+
   async create(dto: CreateNoticeDTO) {
-    return this.prisma.notice.create({ data: { ...dto, authorId: 1 } });
+    return this.prisma.notice.create({ data: { ...dto, authorId: SYSTEM_AUTHOR_ID } });
   }
 
   async update(id: number, dto: UpdateNoticeDTO) {
@@ -73,44 +91,5 @@ export class NoticeService {
   async toggleExpose(id: number) {
     const notice = await this.findOne(id);
     return this.prisma.notice.update({ where: { id }, data: { isExposed: !notice.isExposed } });
-  }
-
-  async searchPublic(dto: OffsetSearchOptionDTO): Promise<OffsetPaginationDTO<object>> {
-    const { pageNo, pageSize, query } = dto;
-    const skip = (pageNo - 1) * pageSize;
-
-    const where = {
-      deletedAt: null,
-      isExposed: true,
-      ...(query && {
-        OR: [
-          { title: { contains: query } },
-          { content: { contains: query } },
-        ],
-      }),
-    };
-
-    const [totalItems, items] = await Promise.all([
-      this.prisma.notice.count({ where }),
-      this.prisma.notice.findMany({
-        where,
-        skip,
-        take: pageSize,
-        orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
-      }),
-    ]);
-
-    return {
-      items,
-      pageInfo: { pageNo, pageSize, totalItems, totalPages: Math.ceil(totalItems / pageSize) },
-    };
-  }
-
-  async findOnePublic(id: number) {
-    const notice = await this.prisma.notice.findFirst({
-      where: { id, deletedAt: null, isExposed: true },
-    });
-    if (!notice) throw new NotFoundException('공지사항을 찾을 수 없습니다.');
-    return notice;
   }
 }

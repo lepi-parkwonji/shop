@@ -1,16 +1,16 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
 import { Auth } from '../../libs/decorators/auth.decorator';
+import { OffsetSearchOptionDTO } from '../../libs/dtos/search-option.dto';
 import { NoticeService } from './notice.service';
 import { CreateNoticeDTO } from './dtos/create-notice.dto';
 import { UpdateNoticeDTO } from './dtos/update-notice.dto';
-import { SearchNoticeDTO } from './dtos/search-notice.dto';
 
 @Controller('notice')
 export class NoticeController {
   constructor(private noticeService: NoticeService) {}
 
   @Get('search')
-  search(@Query() dto: SearchNoticeDTO) {
+  search(@Query() dto: OffsetSearchOptionDTO) {
     return this.noticeService.search(dto);
   }
 
