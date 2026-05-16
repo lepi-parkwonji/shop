@@ -3,16 +3,14 @@
     <h2 class="text-xl font-bold">1:1 문의</h2>
   </div>
 
-  <div class="flex gap-2 mb-4">
-    <input
-      class="input input-bordered flex-1 input-sm min-w-0"
-      type="text"
-      [ngModel]="query()"
-      (ngModelChange)="onQueryChange($event)"
+  <div class="mb-4">
+    <app-search-input
       placeholder="제목, 내용 또는 작성자 검색"
-      (keydown.enter)="onSearchImmediate()"
+      [suggestions]="suggestions()"
+      (queryChange)="onQueryChange($event)"
+      (search)="onSearch($event)"
+      (select)="onSelect($event)"
     />
-    <button class="btn btn-outline btn-sm shrink-0" (click)="onSearchImmediate()">검색</button>
   </div>
 
   <div class="card bg-base-100 shadow-sm overflow-hidden">
@@ -37,7 +35,10 @@
                 class="cursor-pointer text-primary hover:underline truncate max-w-0"
                 (click)="navigateToAnswer(item)"
                 [title]="item.title"
-              >{{ item.title }}</td>
+              >
+                @if (item.isSecret) { <span class="mr-1 text-base-content/40">🔒</span> }
+                {{ item.title }}
+              </td>
               <td class="text-sm hidden md:table-cell truncate">{{ item.authorName }}</td>
               <td class="text-center">
                 <span

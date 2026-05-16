@@ -1,12 +1,12 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { FaqDTO, PaginatedResult, PublicApiService } from '../../../services/public-api.service';
 import { PaginationComponent } from '../../../shared/pagination.component';
+import { SearchInputComponent, SearchSuggestion } from '@demo-shop/ui';
 
 @Component({
   selector: 'app-faq-list',
-  imports: [FormsModule, PaginationComponent],
+  imports: [PaginationComponent, SearchInputComponent],
   templateUrl: './faq-list.component.html',
 })
 export class FaqListComponent {
@@ -17,6 +17,10 @@ export class FaqListComponent {
   pageNo = signal(1);
   query = signal('');
   private searchTimer?: ReturnType<typeof setTimeout>;
+
+  suggestions = computed<SearchSuggestion[]>(() =>
+    (this.result()?.items ?? []).slice(0, 5).map(f => ({ id: f.id, label: f.question })),
+  );
 
   constructor() {
     this.load();
@@ -35,6 +39,17 @@ export class FaqListComponent {
     this.searchTimer = setTimeout(() => { this.pageNo.set(1); this.load(); }, 400);
   }
 
-  onSearchImmediate() { clearTimeout(this.searchTimer); this.pageNo.set(1); this.load(); }
+  onSearch(value: string) {
+    clearTimeout(this.searchTimer);
+    this.query.set(value);
+    this.pageNo.set(1);
+    this.load();
+  }
+
+  onSelect(item: SearchSuggestion) {
+    // FAQ는 상세 페이지 없음 — 선택한 질문으로 검색
+    this.onSearch(item.label);
+  }
+
   changePage(page: number) { this.pageNo.set(page); this.load(); }
 }

@@ -1,0 +1,27 @@
+<div class="relative flex gap-2">
+  <div class="relative flex-1">
+    <input
+      class="input input-bordered w-full input-sm min-w-0"
+      type="text"
+      [ngModel]="value()"
+      [placeholder]="placeholder()"
+      (ngModelChange)="onInput($event)"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+      (keydown)="onKeydown($event)"
+    />
+    @if (showDropdown()) {
+      <ul class="absolute z-20 w-full bg-base-100 border border-base-200 shadow-lg rounded-box mt-1 overflow-hidden">
+        @for (item of suggestions(); track item.id) {
+          <li>
+            <button
+              class="w-full text-left px-4 py-2 text-sm hover:bg-base-200 truncate"
+              (mousedown)="onSelect(item)"
+            >{{ item.label }}</button>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+  <button class="btn btn-outline btn-sm shrink-0" (click)="onSearch()">검색</button>
+</div>

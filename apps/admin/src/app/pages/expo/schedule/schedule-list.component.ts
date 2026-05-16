@@ -1,9 +1,10 @@
 import { DecimalPipe, SlicePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SearchInputComponent, SearchSuggestion } from '@demo-shop/ui';
 import {
   ScheduleResponseDto as ScheduleDTO,
   scheduleControllerRemove,
@@ -20,7 +21,7 @@ type ScheduleStatus = 'PENDING' | 'ONGOING' | 'FINISHED' | 'CANCELLED';
 
 @Component({
   selector: 'app-schedule-list',
-  imports: [FormsModule, SlicePipe, DecimalPipe, PaginationComponent],
+  imports: [FormsModule, SlicePipe, DecimalPipe, PaginationComponent, SearchInputComponent],
   templateUrl: './schedule-list.component.html',
 })
 export class ScheduleListComponent {
@@ -38,6 +39,10 @@ export class ScheduleListComponent {
   selectedItem = signal<ScheduleDTO | null>(null);
   drawerLoading = signal(false);
   private searchTimer?: ReturnType<typeof setTimeout>;
+
+  suggestions = computed<SearchSuggestion[]>(() =>
+    (this.result()?.items ?? []).slice(0, 5).map(s => ({ id: s.id, label: s.fairName })),
+  );
 
   constructor() {
     this.load();
@@ -72,7 +77,11 @@ export class ScheduleListComponent {
   onStatusChange(value: string) { this.statusQuery.set(value as ScheduleStatus | ''); this.pageNo.set(1); this.load(); }
   onYearChange(value: string) { this.yearQuery.set(value); this.pageNo.set(1); this.load(); }
   onRegionChange(value: string) { this.regionQuery.set(value); this.pageNo.set(1); this.load(); }
-  onSearchImmediate() { clearTimeout(this.searchTimer); this.pageNo.set(1); this.load(); }
+  onSearch(value: string) { clearTimeout(this.searchTimer); this.query.set(value); this.pageNo.set(1); this.load(); }
+  onSelect(item: SearchSuggestion) {
+    const found = this.result()?.items.find(s => s.id === item.id);
+    if (found) this.navigateToEdit(found);
+  }
   changePage(page: number) { this.pageNo.set(page); this.load(); }
 
   rowNumber(index: number): number {

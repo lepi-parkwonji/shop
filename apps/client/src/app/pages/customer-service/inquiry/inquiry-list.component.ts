@@ -1,16 +1,16 @@
 import { DatePipe } from '@angular/common';
-import { Component, DestroyRef, inject, signal, effect } from '@angular/core';
+import { Component, DestroyRef, inject, signal, effect, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { PaginationComponent } from '../../../shared/pagination.component';
+import { SearchInputComponent, SearchSuggestion } from '@demo-shop/ui';
 import { HttpClient } from '@angular/common/http';
 import { InquiryResponseDto } from '@demo-shop/api-client';
 import { AuthService } from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-inquiry-list',
-  imports: [FormsModule, DatePipe, RouterLink, PaginationComponent],
+  imports: [DatePipe, RouterLink, PaginationComponent, SearchInputComponent],
   templateUrl: './inquiry-list.component.html',
 })
 export class InquiryListComponent {
@@ -26,9 +26,16 @@ export class InquiryListComponent {
   needLogin = signal(false);
   private searchTimer?: ReturnType<typeof setTimeout>;
 
+  suggestions = computed<SearchSuggestion[]>(() =>
+    (this.result()?.items ?? [])
+      .filter(i => !i.isSecret)
+      .slice(0, 5)
+      .map(i => ({ id: i.id, label: i.title })),
+  );
+
   constructor() {
     this.needLogin.set(this.route.snapshot.queryParamMap.get('login') === '1');
-    
+
     effect(() => {
       if (this.authService.user()) {
         if (this.needLogin()) {
@@ -62,6 +69,16 @@ export class InquiryListComponent {
     this.searchTimer = setTimeout(() => { this.pageNo.set(1); this.load(); }, 400);
   }
 
-  onSearchImmediate() { clearTimeout(this.searchTimer); this.pageNo.set(1); this.load(); }
+  onSearch(value: string) {
+    clearTimeout(this.searchTimer);
+    this.query.set(value);
+    this.pageNo.set(1);
+    this.load();
+  }
+
+  onSelect(item: SearchSuggestion) {
+    this.router.navigate(['/customer-service/inquiry', item.id]);
+  }
+
   changePage(page: number) { this.pageNo.set(page); this.load(); }
 }

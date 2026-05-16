@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { Inquiry, Prisma } from '@generated/prisma';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OffsetPaginationDTO } from '../../libs/dtos/offset-pagination.dto';
@@ -55,7 +55,15 @@ export class InquiryService {
       ...this.buildSearchWhere(query),
       isExposed: true,
     };
-    return this.paginate(where, pageNo, pageSize);
+    const result = await this.paginate(where, pageNo, pageSize);
+    return {
+      ...result,
+      items: result.items.map(item =>
+        item.isSecret
+          ? { ...item, title: '비밀글입니다.', content: '', authorName: '비공개' }
+          : item,
+      ),
+    };
   }
 
   async findOne(id: number) {
@@ -64,8 +72,30 @@ export class InquiryService {
     return inquiry;
   }
 
-  async create(dto: CreateInquiryDTO) {
-    return this.prisma.inquiry.create({ data: dto });
+  async findOnePublic(id: number) {
+    const inquiry = await this.prisma.inquiry.findFirst({ where: { id, deletedAt: null, isExposed: true } });
+    if (!inquiry) throw new NotFoundException('문의를 찾을 수 없습니다.');
+    if (inquiry.isSecret) throw new ForbiddenException('비밀글입니다.');
+    return inquiry;
+  }
+
+  async findOneByCustomer(id: number, customerId: number) {
+    const inquiry = await this.prisma.inquiry.findFirst({ where: { id, deletedAt: null } });
+    if (!inquiry) throw new NotFoundException('문의를 찾을 수 없습니다.');
+    if (inquiry.isSecret && inquiry.customerId !== customerId) throw new ForbiddenException('비밀글입니다.');
+    return inquiry;
+  }
+
+  async create(dto: CreateInquiryDTO, customerId?: number) {
+    return this.prisma.inquiry.create({
+      data: {
+        title: dto.title,
+        content: dto.content,
+        authorName: dto.authorName,
+        isSecret: dto.isSecret ?? false,
+        customerId: customerId ?? null,
+      },
+    });
   }
 
   async answer(id: number, dto: AnswerInquiryDTO) {

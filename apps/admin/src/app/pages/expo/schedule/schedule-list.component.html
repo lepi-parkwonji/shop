@@ -27,15 +27,14 @@
       <option value="FINISHED">마감</option>
       <option value="CANCELLED">취소</option>
     </select>
-    <input
-      class="input input-bordered flex-1 input-sm min-w-0"
-      type="text"
-      [ngModel]="query()"
-      (ngModelChange)="onQueryChange($event)"
+    <app-search-input
+      class="flex-1 min-w-0"
       placeholder="박람회명 검색"
-      (keydown.enter)="onSearchImmediate()"
+      [suggestions]="suggestions()"
+      (queryChange)="onQueryChange($event)"
+      (search)="onSearch($event)"
+      (select)="onSelect($event)"
     />
-    <button class="btn btn-outline btn-sm shrink-0" (click)="onSearchImmediate()">검색</button>
   </div>
 
   <div class="card bg-base-100 shadow-sm overflow-hidden">
