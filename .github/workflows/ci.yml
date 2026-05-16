@@ -25,6 +25,8 @@ jobs:
           node-version: 22
           cache: 'npm'
 
+      - run: corepack enable
+
       - run: npm ci
       # nx run-many 실행 전에 Prisma Client 생성
       - run: npx prisma generate
