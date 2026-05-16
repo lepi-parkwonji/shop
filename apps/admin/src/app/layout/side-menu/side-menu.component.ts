@@ -16,18 +16,18 @@ const MENUS: Menu[] = [
     ],
   },
   {
-    name: '행사 운영 관리',
+    name: '박람회 운영 관리',
     children: [
-      { name: '행사 일정 관리', href: '/event/schedule' },
-      { name: '참가 업체 관리', href: '/event/exhibitor' },
-      { name: '관람 신청 관리', href: '/event/registration' },      
+      { name: '박람회 관리', href: '/expo/schedule' },
+      { name: '참가 업체 관리', href: '/expo/exhibitor' },
     ],
   },
+
   {
     name: '갤러리/보도자료',
     children: [
-      { name: '갤러리 관리', href: '/event/gallery' },
-      { name: '보도자료 관리', href: '/event/press' },    
+      { name: '갤러리 관리', href: '/expo/gallery' },
+      { name: '보도자료 관리', href: '/expo/press' },    
     ],
   },
 ];

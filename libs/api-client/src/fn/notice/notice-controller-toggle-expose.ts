@@ -10,11 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 import { NoticeResponseDto } from '../../models/notice-response-dto';
 
 export interface NoticeControllerToggleExpose$Params {
+  id: number;
 }
 
-export function noticeControllerToggleExpose(http: HttpClient, rootUrl: string, params?: NoticeControllerToggleExpose$Params, context?: HttpContext): Observable<StrictHttpResponse<NoticeResponseDto>> {
+export function noticeControllerToggleExpose(http: HttpClient, rootUrl: string, params: NoticeControllerToggleExpose$Params, context?: HttpContext): Observable<StrictHttpResponse<NoticeResponseDto>> {
   const rb = new RequestBuilder(rootUrl, noticeControllerToggleExpose.PATH, 'patch');
   if (params) {
+    rb.path('id', params.id, {});
   }
 
   return http.request(

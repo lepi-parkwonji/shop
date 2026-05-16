@@ -1,25 +1,33 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NoticeApiService, NoticeDTO } from '../../../services/notice-api.service';
+import {
+  NoticeResponseDto as NoticeDTO,
+  noticeControllerCreate,
+  noticeControllerFindOne,
+  noticeControllerUpdate,
+} from '@demo-shop/api-client';
+import { map } from 'rxjs/operators';
 import { ToastService } from '../../../services/toast.service';
+import { RichEditorComponent } from '../../../shared/rich-editor.component';
 
 const TITLE_MAX = 100;
-const CONTENT_MAX = 2000;
 
 @Component({
   selector: 'app-notice-form',
-  imports: [FormsModule],
+  imports: [FormsModule, RichEditorComponent],
   templateUrl: './notice-form.component.html',
 })
 export class NoticeFormComponent implements OnInit {
-  private noticeApi = inject(NoticeApiService);
+  @ViewChild(RichEditorComponent) editorRef!: RichEditorComponent;
+
+  private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private toast = inject(ToastService);
 
   readonly TITLE_MAX = TITLE_MAX;
-  readonly CONTENT_MAX = CONTENT_MAX;
 
   title = '';
   content = '';
@@ -41,7 +49,7 @@ export class NoticeFormComponent implements OnInit {
       this.content = state.notice.content;
     }
 
-    this.noticeApi.findOne(this.noticeId).subscribe({
+    noticeControllerFindOne(this.http, '', { id: this.noticeId }).pipe(map(r => r.body)).subscribe({
       next: (notice) => {
         this.title = notice.title;
         this.content = notice.content;
@@ -60,16 +68,21 @@ export class NoticeFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.title.trim() || !this.content.trim()) {
-      this.errorMsg.set('제목과 내용을 모두 입력해주세요.');
+    if (!this.title.trim()) {
+      this.errorMsg.set('제목을 입력해주세요.');
+      return;
+    }
+    if (!this.editorRef.getText().trim()) {
+      this.errorMsg.set('내용을 입력해주세요.');
       return;
     }
     this.loading.set(true);
     this.errorMsg.set('');
 
+    const body = { title: this.title, content: this.content };
     const saveRequest = this.isEdit && this.noticeId
-      ? this.noticeApi.update(this.noticeId, { title: this.title, content: this.content })
-      : this.noticeApi.create({ title: this.title, content: this.content });
+      ? noticeControllerUpdate(this.http, '', { id: this.noticeId, body }).pipe(map(r => r.body))
+      : noticeControllerCreate(this.http, '', { body }).pipe(map(r => r.body));
 
     saveRequest.subscribe({
       next: () => {

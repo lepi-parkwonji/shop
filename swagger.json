@@ -197,7 +197,16 @@
     "/api/notice/{id}": {
       "get": {
         "operationId": "NoticeController_findOne",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -216,7 +225,16 @@
       },
       "patch": {
         "operationId": "NoticeController_update",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -250,7 +268,16 @@
       },
       "delete": {
         "operationId": "NoticeController_remove",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -312,7 +339,16 @@
     "/api/notice/{id}/pin": {
       "patch": {
         "operationId": "NoticeController_togglePin",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -338,7 +374,16 @@
     "/api/notice/{id}/expose": {
       "patch": {
         "operationId": "NoticeController_toggleExpose",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -426,7 +471,16 @@
     "/api/faq/{id}": {
       "get": {
         "operationId": "FaqController_findOne",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -445,7 +499,16 @@
       },
       "patch": {
         "operationId": "FaqController_update",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -479,7 +542,16 @@
       },
       "delete": {
         "operationId": "FaqController_remove",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -541,7 +613,16 @@
     "/api/faq/{id}/pin": {
       "patch": {
         "operationId": "FaqController_togglePin",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -567,7 +648,16 @@
     "/api/faq/{id}/expose": {
       "patch": {
         "operationId": "FaqController_toggleExpose",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -660,7 +750,16 @@
     "/api/inquiry/{id}": {
       "get": {
         "operationId": "InquiryController_findOne",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -684,7 +783,16 @@
       },
       "delete": {
         "operationId": "InquiryController_remove",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -741,7 +849,16 @@
     "/api/inquiry/{id}/answer": {
       "patch": {
         "operationId": "InquiryController_answer",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -777,7 +894,16 @@
     "/api/inquiry/{id}/expose": {
       "patch": {
         "operationId": "InquiryController_toggleExpose",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -870,7 +996,16 @@
     "/api/gallery/{id}": {
       "get": {
         "operationId": "GalleryController_findOne",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -894,7 +1029,16 @@
       },
       "patch": {
         "operationId": "GalleryController_update",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -928,7 +1072,16 @@
       },
       "delete": {
         "operationId": "GalleryController_remove",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -990,7 +1143,16 @@
     "/api/gallery/{id}/expose": {
       "patch": {
         "operationId": "GalleryController_toggleExpose",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1076,6 +1238,521 @@
         ]
       }
     },
+    "/api/schedule/search": {
+      "get": {
+        "operationId": "ScheduleController_search",
+        "parameters": [
+          {
+            "name": "region",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "PENDING",
+                "ONGOING",
+                "FINISHED",
+                "CANCELLED"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "query",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ScheduleResponseDTO"
+                      }
+                    },
+                    "pageInfo": {
+                      "$ref": "#/components/schemas/PageInfoDTO"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "pageInfo"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "schedule"
+        ]
+      }
+    },
+    "/api/schedule/{id}": {
+      "get": {
+        "operationId": "ScheduleController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "schedule"
+        ]
+      },
+      "patch": {
+        "operationId": "ScheduleController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateScheduleDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "schedule"
+        ]
+      },
+      "delete": {
+        "operationId": "ScheduleController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "schedule"
+        ]
+      }
+    },
+    "/api/schedule": {
+      "post": {
+        "operationId": "ScheduleController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateScheduleDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "schedule"
+        ]
+      }
+    },
+    "/api/schedule/{id}/expose": {
+      "patch": {
+        "operationId": "ScheduleController_toggleExpose",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "schedule"
+        ]
+      }
+    },
+    "/api/exhibitor/search": {
+      "get": {
+        "operationId": "ExhibitorController_search",
+        "parameters": [
+          {
+            "name": "scheduleId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "PENDING",
+                "WAITING_PAYMENT",
+                "APPROVED",
+                "CANCELED"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageNo",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "pageSize",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "example": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "query",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ExhibitorResponseDTO"
+                      }
+                    },
+                    "pageInfo": {
+                      "$ref": "#/components/schemas/PageInfoDTO"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "pageInfo"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "exhibitor"
+        ]
+      }
+    },
+    "/api/exhibitor/{id}": {
+      "get": {
+        "operationId": "ExhibitorController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExhibitorResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "exhibitor"
+        ]
+      },
+      "patch": {
+        "operationId": "ExhibitorController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateExhibitorDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExhibitorResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "exhibitor"
+        ]
+      },
+      "delete": {
+        "operationId": "ExhibitorController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExhibitorResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "exhibitor"
+        ]
+      }
+    },
+    "/api/exhibitor": {
+      "post": {
+        "operationId": "ExhibitorController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExhibitorDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExhibitorResponseDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "exhibitor"
+        ]
+      }
+    },
     "/api/public/notices": {
       "get": {
         "operationId": "PublicController_searchNotices",
@@ -1129,6 +1806,111 @@
         },
         "tags": [
           "Public"
+        ]
+      }
+    },
+    "/api/public/inquiries": {
+      "get": {
+        "operationId": "PublicController_searchInquiries",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Public"
+        ]
+      }
+    },
+    "/api/client/auth/kakao-url": {
+      "get": {
+        "operationId": "CustomerController_getKakaoLoginUrl",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Client"
+        ]
+      }
+    },
+    "/api/client/auth/kakao": {
+      "post": {
+        "operationId": "CustomerController_kakaoLogin",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Client"
+        ]
+      }
+    },
+    "/api/client/auth/signup": {
+      "post": {
+        "operationId": "CustomerController_signup",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Client"
+        ]
+      }
+    },
+    "/api/client/auth/signin": {
+      "post": {
+        "operationId": "CustomerController_signin",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Client"
+        ]
+      }
+    },
+    "/api/client/me": {
+      "get": {
+        "operationId": "CustomerController_getMe",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerDTO"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Client"
+        ]
+      }
+    },
+    "/api/client/logout": {
+      "post": {
+        "operationId": "CustomerController_logout",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Client"
         ]
       }
     }
@@ -1559,6 +2341,427 @@
             "type": "string"
           }
         }
+      },
+      "ScheduleResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "fairName": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "region": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ONGOING",
+              "FINISHED",
+              "CANCELLED"
+            ]
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "entranceFee": {
+            "type": "number"
+          },
+          "place": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "notice": {
+            "type": "string"
+          },
+          "eventNotes": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "visitorCount": {
+            "type": "number"
+          },
+          "isExposed": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "fairName",
+          "year",
+          "region",
+          "type",
+          "status",
+          "startTime",
+          "endTime",
+          "entranceFee",
+          "place",
+          "details",
+          "visitorCount",
+          "isExposed",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateScheduleDTO": {
+        "type": "object",
+        "properties": {
+          "fairName": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "region": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string",
+            "description": "ISO 8601 datetime"
+          },
+          "endTime": {
+            "type": "string",
+            "description": "ISO 8601 datetime"
+          },
+          "entranceFee": {
+            "type": "number",
+            "default": 0
+          },
+          "place": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "notice": {
+            "type": "string"
+          },
+          "eventNotes": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fairName",
+          "year",
+          "region",
+          "startTime",
+          "endTime",
+          "entranceFee",
+          "place",
+          "details"
+        ]
+      },
+      "UpdateScheduleDTO": {
+        "type": "object",
+        "properties": {
+          "fairName": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "region": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "ONGOING",
+              "FINISHED",
+              "CANCELLED"
+            ]
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "entranceFee": {
+            "type": "number"
+          },
+          "place": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "notice": {
+            "type": "string"
+          },
+          "eventNotes": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "visitorCount": {
+            "type": "number"
+          },
+          "isExposed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ExhibitorResponseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "scheduleId": {
+            "type": "number"
+          },
+          "scheduleFairName": {
+            "type": "string"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "representativeName": {
+            "type": "string"
+          },
+          "businessRegNumber": {
+            "type": "string"
+          },
+          "managerName": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "boothType": {
+            "type": "string",
+            "enum": [
+              "SPACE_ONLY",
+              "SHELL_SCHEME",
+              "PREMIUM"
+            ]
+          },
+          "boothCount": {
+            "type": "number"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalFee": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "WAITING_PAYMENT",
+              "APPROVED",
+              "CANCELED"
+            ]
+          },
+          "boothNumber": {
+            "type": "string"
+          },
+          "adminMemo": {
+            "type": "string"
+          },
+          "isExposed": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "scheduleId",
+          "scheduleFairName",
+          "companyName",
+          "representativeName",
+          "businessRegNumber",
+          "managerName",
+          "contact",
+          "email",
+          "boothType",
+          "boothCount",
+          "options",
+          "totalFee",
+          "status",
+          "isExposed",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateExhibitorDTO": {
+        "type": "object",
+        "properties": {
+          "scheduleId": {
+            "type": "number"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "representativeName": {
+            "type": "string"
+          },
+          "businessRegNumber": {
+            "type": "string"
+          },
+          "managerName": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "boothType": {
+            "type": "string",
+            "enum": [
+              "SPACE_ONLY",
+              "SHELL_SCHEME",
+              "PREMIUM"
+            ]
+          },
+          "boothCount": {
+            "type": "number"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalFee": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "scheduleId",
+          "companyName",
+          "boothType",
+          "boothCount"
+        ]
+      },
+      "UpdateExhibitorDTO": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string"
+          },
+          "representativeName": {
+            "type": "string"
+          },
+          "businessRegNumber": {
+            "type": "string"
+          },
+          "managerName": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "boothType": {
+            "type": "string",
+            "enum": [
+              "SPACE_ONLY",
+              "SHELL_SCHEME",
+              "PREMIUM"
+            ]
+          },
+          "boothCount": {
+            "type": "number"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalFee": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "WAITING_PAYMENT",
+              "APPROVED",
+              "CANCELED"
+            ]
+          },
+          "boothNumber": {
+            "type": "string"
+          },
+          "adminMemo": {
+            "type": "string"
+          },
+          "isExposed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CustomerDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "profileImage": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "nickname"
+        ]
       }
     }
   }

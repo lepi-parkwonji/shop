@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
-import { ApiBody, ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiBearerAuth, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../libs/decorators/auth.decorator';
 import { OffsetSearchOptionDTO } from '../../libs/dtos/search-option.dto';
 import { ApiPaginatedResponse } from '../../libs/swagger/api-paginated-response.decorator';
@@ -20,7 +20,7 @@ export class FaqController {
     return this.faqService.search(dto);
   }
 
-  @ApiOkResponse({ type: FaqResponseDTO })
+  @ApiOkResponse({ type: FaqResponseDTO }) @ApiParam({ name: 'id', type: Number })
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.faqService.findOne(id);
@@ -33,28 +33,28 @@ export class FaqController {
     return this.faqService.create(dto);
   }
 
-  @ApiBearerAuth() @ApiOkResponse({ type: FaqResponseDTO }) @ApiBody({ type: UpdateFaqDTO })
+  @ApiBearerAuth() @ApiOkResponse({ type: FaqResponseDTO }) @ApiBody({ type: UpdateFaqDTO }) @ApiParam({ name: 'id', type: Number })
   @Patch(':id')
   @Auth()
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateFaqDTO) {
     return this.faqService.update(id, dto);
   }
 
-  @ApiBearerAuth() @ApiOkResponse({ type: FaqResponseDTO })
+  @ApiBearerAuth() @ApiOkResponse({ type: FaqResponseDTO }) @ApiParam({ name: 'id', type: Number })
   @Delete(':id')
   @Auth()
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.faqService.remove(id);
   }
 
-  @ApiBearerAuth() @ApiOkResponse({ type: FaqResponseDTO })
+  @ApiBearerAuth() @ApiOkResponse({ type: FaqResponseDTO }) @ApiParam({ name: 'id', type: Number })
   @Patch(':id/pin')
   @Auth()
   togglePin(@Param('id', ParseIntPipe) id: number) {
     return this.faqService.togglePin(id);
   }
 
-  @ApiBearerAuth() @ApiOkResponse({ type: FaqResponseDTO })
+  @ApiBearerAuth() @ApiOkResponse({ type: FaqResponseDTO }) @ApiParam({ name: 'id', type: Number })
   @Patch(':id/expose')
   @Auth()
   toggleExpose(@Param('id', ParseIntPipe) id: number) {

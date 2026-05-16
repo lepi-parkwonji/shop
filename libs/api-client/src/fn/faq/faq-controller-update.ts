@@ -11,12 +11,14 @@ import { FaqResponseDto } from '../../models/faq-response-dto';
 import { UpdateFaqDto } from '../../models/update-faq-dto';
 
 export interface FaqControllerUpdate$Params {
+  id: number;
       body: UpdateFaqDto
 }
 
 export function faqControllerUpdate(http: HttpClient, rootUrl: string, params: FaqControllerUpdate$Params, context?: HttpContext): Observable<StrictHttpResponse<FaqResponseDto>> {
   const rb = new RequestBuilder(rootUrl, faqControllerUpdate.PATH, 'patch');
   if (params) {
+    rb.path('id', params.id, {});
     rb.body(params.body, 'application/json');
   }
 

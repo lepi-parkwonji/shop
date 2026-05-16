@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiBody, ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../libs/decorators/auth.decorator';
 import { ReqAdmin } from '../../libs/decorators/req-admin.decorator';
-import type { JwtPayload } from '../auth/guards/auth.guard';
+import type { JwtPayload } from './guards/admin-auth.guard';
 import { TokensDTO } from '../../libs/dtos/tokens.dto';
 import { AdminDTO } from './dtos/admin.dto';
 import { AdminSignInDTO } from './dtos/admin-sign-in.dto';

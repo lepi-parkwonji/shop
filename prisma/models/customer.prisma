@@ -1,0 +1,12 @@
+/// 고객 (클라이언트)
+model Customer {
+  id            Int      @id @default(autoincrement())
+  provider      String   @default("LOCAL") // 'LOCAL', 'KAKAO', etc.
+  oauthId       String?  @unique
+  password      String?
+  email         String?  @unique
+  nickname      String
+  profileImage  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

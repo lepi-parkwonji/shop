@@ -1,0 +1,30 @@
+enum ScheduleStatus {
+  PENDING
+  ONGOING
+  FINISHED
+  CANCELLED
+}
+
+/// 박람회 일정
+model Schedule {
+  id           Int            @id @default(autoincrement())
+  fairName     String
+  year         Int
+  region       String
+  type         String
+  status       ScheduleStatus @default(PENDING)
+  startTime    DateTime
+  endTime      DateTime
+  entranceFee  Int            @default(0)
+  place        String
+  details      String
+  notice       String?
+  eventNotes   String?
+  thumbnail    String?
+  visitorCount Int            @default(0)
+  isExposed    Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  deletedAt    DateTime?
+  exhibitors   Exhibitor[]
+}

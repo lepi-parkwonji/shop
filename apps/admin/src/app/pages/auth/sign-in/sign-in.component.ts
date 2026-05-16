@@ -1,8 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AdminApiService } from '../../../services/admin-api.service';
-import { AdminStore } from '../../../stores/admin.store';
+import { AuthService } from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -10,8 +9,7 @@ import { AdminStore } from '../../../stores/admin.store';
   templateUrl: './sign-in.component.html',
 })
 export class SignInComponent {
-  private adminApi = inject(AdminApiService);
-  private adminStore = inject(AdminStore);
+  private authService = inject(AuthService);
   private router = inject(Router);
 
   usrname = '';
@@ -24,11 +22,15 @@ export class SignInComponent {
     this.loading.set(true);
     this.errorMsg.set('');
 
-    this.adminApi.signin(this.usrname, this.password).subscribe({
+    this.authService.signin(this.usrname, this.password).subscribe({
       next: (tokens) => {
-        localStorage.setItem('accessToken', tokens.accessToken);
-        localStorage.setItem('refreshToken', tokens.refreshToken);
-        this.adminStore.fetch().then(() => this.router.navigate(['/']));
+        this.authService.loginAndFetch(tokens).then(ok => {
+          if (ok) this.router.navigate(['/']);
+          else {
+            this.errorMsg.set('로그인 정보를 불러오지 못했습니다.');
+            this.loading.set(false);
+          }
+        });
       },
       error: () => {
         this.errorMsg.set('아이디 또는 비밀번호가 올바르지 않습니다.');

@@ -11,12 +11,14 @@ import { NoticeResponseDto } from '../../models/notice-response-dto';
 import { UpdateNoticeDto } from '../../models/update-notice-dto';
 
 export interface NoticeControllerUpdate$Params {
+  id: number;
       body: UpdateNoticeDto
 }
 
 export function noticeControllerUpdate(http: HttpClient, rootUrl: string, params: NoticeControllerUpdate$Params, context?: HttpContext): Observable<StrictHttpResponse<NoticeResponseDto>> {
   const rb = new RequestBuilder(rootUrl, noticeControllerUpdate.PATH, 'patch');
   if (params) {
+    rb.path('id', params.id, {});
     rb.body(params.body, 'application/json');
   }
 

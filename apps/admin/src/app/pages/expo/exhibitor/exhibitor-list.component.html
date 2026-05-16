@@ -1,0 +1,101 @@
+<div class="w-full max-w-6xl">
+  <div class="flex justify-between items-center mb-5">
+    <h2 class="text-xl font-bold">참가 업체 관리</h2>
+    <div class="flex gap-2">
+      <button class="btn btn-outline btn-sm">엑셀 다운로드</button>
+      <button class="btn btn-primary btn-sm" (click)="navigateToNew()">+ 수동 등록</button>
+    </div>
+  </div>
+
+  <div class="flex gap-2 mb-4">
+    <select class="select select-bordered select-sm w-36">
+      <option value="">전체 상태</option>
+      <option value="PENDING">신청 대기</option>
+      <option value="WAITING_PAYMENT">입금 대기</option>
+      <option value="APPROVED">승인 완료</option>
+    </select>
+    <input
+      class="input input-bordered flex-1 input-sm min-w-0"
+      type="text"
+      [ngModel]="query()"
+      (ngModelChange)="onQueryChange($event)"
+      placeholder="업체명, 담당자명 또는 연락처 검색"
+      (keydown.enter)="onSearchImmediate()"
+    />
+    <button class="btn btn-outline btn-sm shrink-0" (click)="onSearchImmediate()">검색</button>
+  </div>
+
+  <div class="card bg-base-100 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="table table-zebra table-fixed w-full">
+        <thead>
+          <tr>
+            <th class="w-14 text-center">번호</th>
+            <th class="w-28 text-center">진행 상태</th>
+            <th class="w-48">업체명 (배정부스)</th>
+            <th class="w-32 hidden md:table-cell">담당자(연락처)</th>
+            <th class="w-40">신청 내역</th>
+            <th class="w-24 text-right">총 결제액</th>
+            <th class="w-28 hidden sm:table-cell text-center">신청일</th>
+            <th class="w-16 text-center">관리</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of result()?.items ?? []; track item.id; let idx = $index) {
+            <tr class="hover cursor-pointer" (click)="openDetail(item)">
+              <td class="text-sm text-base-content/50 text-center">{{ rowNumber(idx) }}</td>
+              <td class="text-center">
+                <div class="badge badge-sm font-medium" 
+                     [ngClass]="{
+                       'badge-neutral': item.status === 'PENDING',
+                       'badge-warning': item.status === 'WAITING_PAYMENT',
+                       'badge-success': item.status === 'APPROVED',
+                       'badge-error': item.status === 'CANCELED'
+                     }">
+                  {{ item.status === 'PENDING' ? '신청 대기' : item.status === 'WAITING_PAYMENT' ? '입금 대기' : item.status === 'APPROVED' ? '승인 완료' : '취소' }}
+                </div>
+              </td>
+              <td>
+                <div class="font-bold text-base-content/90">{{ item.companyName }}</div>
+                <div class="text-xs font-mono text-base-content/50">{{ item.boothNumber ? '부스: ' + item.boothNumber : '미배정' }}</div>
+              </td>
+              <td class="hidden md:table-cell">
+                <div class="text-sm text-base-content/90">{{ item.managerName }}</div>
+                <div class="text-xs text-base-content/60">{{ item.contact }}</div>
+              </td>
+              <td class="text-sm">
+                <div class="font-medium">
+                  {{ item.boothType === 'SPACE_ONLY' ? '독립' : item.boothType === 'PREMIUM' ? '프리미엄' : '조립' }} 
+                  <span class="text-primary">{{ item.boothCount }}부스</span>
+                </div>
+                <div class="text-xs text-base-content/50 truncate max-w-[150px]">{{ item.scheduleFairName }}</div>
+              </td>
+              <td class="text-sm text-right font-medium">
+                {{ item.totalFee | number }}원
+              </td>
+              <td class="text-sm hidden sm:table-cell text-base-content/60 text-center">
+                {{ item.createdAt | slice:0:10 }}
+              </td>
+              <td class="text-center">
+                <button class="btn btn-xs btn-error btn-outline whitespace-nowrap" (click)="remove(item, $event)">삭제</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="8" class="text-center text-base-content/40 py-10">등록된 업체가 없습니다.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  @if (result(); as r) {
+    <div class="mt-4 flex justify-center">
+      <app-pagination
+        [pageNo]="pageNo()"
+        [totalPages]="r.pageInfo.totalPages"
+        [totalItems]="r.pageInfo.totalItems"
+        (pageChange)="changePage($event)"
+      ></app-pagination>
+    </div>
+  }
+</div>

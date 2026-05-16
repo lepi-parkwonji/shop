@@ -10,11 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 import { NoticeResponseDto } from '../../models/notice-response-dto';
 
 export interface NoticeControllerFindOne$Params {
+  id: number;
 }
 
-export function noticeControllerFindOne(http: HttpClient, rootUrl: string, params?: NoticeControllerFindOne$Params, context?: HttpContext): Observable<StrictHttpResponse<NoticeResponseDto>> {
+export function noticeControllerFindOne(http: HttpClient, rootUrl: string, params: NoticeControllerFindOne$Params, context?: HttpContext): Observable<StrictHttpResponse<NoticeResponseDto>> {
   const rb = new RequestBuilder(rootUrl, noticeControllerFindOne.PATH, 'get');
   if (params) {
+    rb.path('id', params.id, {});
   }
 
   return http.request(

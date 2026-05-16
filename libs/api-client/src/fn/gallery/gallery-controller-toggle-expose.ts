@@ -10,11 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 import { GalleryResponseDto } from '../../models/gallery-response-dto';
 
 export interface GalleryControllerToggleExpose$Params {
+  id: number;
 }
 
-export function galleryControllerToggleExpose(http: HttpClient, rootUrl: string, params?: GalleryControllerToggleExpose$Params, context?: HttpContext): Observable<StrictHttpResponse<GalleryResponseDto>> {
+export function galleryControllerToggleExpose(http: HttpClient, rootUrl: string, params: GalleryControllerToggleExpose$Params, context?: HttpContext): Observable<StrictHttpResponse<GalleryResponseDto>> {
   const rb = new RequestBuilder(rootUrl, galleryControllerToggleExpose.PATH, 'patch');
   if (params) {
+    rb.path('id', params.id, {});
   }
 
   return http.request(

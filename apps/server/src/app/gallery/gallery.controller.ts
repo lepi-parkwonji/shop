@@ -2,7 +2,7 @@ import {
   Body, Controller, Delete, Get, Param, ParseIntPipe,
   Patch, Post, Query, UploadedFile, UseInterceptors,
 } from '@nestjs/common';
-import { ApiBody, ApiBearerAuth, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiBearerAuth, ApiConsumes, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -28,7 +28,7 @@ export class GalleryController {
     return this.galleryService.search(dto);
   }
 
-  @ApiOkResponse({ type: GalleryResponseDTO })
+  @ApiOkResponse({ type: GalleryResponseDTO }) @ApiParam({ name: 'id', type: Number })
   @Get(':id')
   @Auth()
   findOne(@Param('id', ParseIntPipe) id: number) {
@@ -42,21 +42,21 @@ export class GalleryController {
     return this.galleryService.create(dto);
   }
 
-  @ApiOkResponse({ type: GalleryResponseDTO }) @ApiBody({ type: UpdateGalleryDTO })
+  @ApiOkResponse({ type: GalleryResponseDTO }) @ApiBody({ type: UpdateGalleryDTO }) @ApiParam({ name: 'id', type: Number })
   @Patch(':id')
   @Auth()
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateGalleryDTO) {
     return this.galleryService.update(id, dto);
   }
 
-  @ApiOkResponse({ type: GalleryResponseDTO })
+  @ApiOkResponse({ type: GalleryResponseDTO }) @ApiParam({ name: 'id', type: Number })
   @Delete(':id')
   @Auth()
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.galleryService.remove(id);
   }
 
-  @ApiOkResponse({ type: GalleryResponseDTO })
+  @ApiOkResponse({ type: GalleryResponseDTO }) @ApiParam({ name: 'id', type: Number })
   @Patch(':id/expose')
   @Auth()
   toggleExpose(@Param('id', ParseIntPipe) id: number) {

@@ -1,0 +1,156 @@
+<div class="w-full max-w-6xl pb-10">
+  <div class="bg-base-100 rounded-box shadow-sm border border-base-200 overflow-hidden">
+    <!-- Header -->
+    <div class="p-6 border-b border-base-200 flex items-center justify-center relative bg-base-50">
+      <button class="btn btn-sm btn-ghost btn-circle absolute left-6" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+      </button>
+      <h3 class="text-xl font-bold text-base-content">
+        {{ isNew() ? '신규 참가 업체 수동 등록' : '참가 업체 상세' }}
+      </h3>
+    </div>
+
+    <div class="p-8 space-y-10">
+
+      <!-- 관리자 전용 영역 (수정 모드에서만) -->
+      @if (!isNew()) {
+        <section class="bg-base-200/50 border border-base-300 p-6 rounded-xl">
+          <h4 class="font-bold text-lg mb-4 flex items-center gap-2 text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+            </svg>
+            운영 관리
+          </h4>
+          <div class="space-y-5 text-sm">
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <label for="status-select" class="font-medium text-base-content/80 block mb-2">상태 변경</label>
+                <select id="status-select" class="select select-bordered w-full" [(ngModel)]="status">
+                  <option value="PENDING">신청 대기</option>
+                  <option value="WAITING_PAYMENT">입금 대기</option>
+                  <option value="APPROVED">승인 완료</option>
+                  <option value="CANCELED">취소</option>
+                </select>
+              </div>
+              <div>
+                <label for="booth-number-input" class="font-medium text-base-content/80 block mb-2">부스 위치 배정</label>
+                <input id="booth-number-input" type="text" class="input input-bordered w-full font-mono" [(ngModel)]="boothNumber" placeholder="예: A-101, A-102">
+              </div>
+            </div>
+            <div>
+              <label for="admin-memo-textarea" class="font-medium text-base-content/80 block mb-2">관리자 메모 (내부용)</label>
+              <textarea id="admin-memo-textarea" class="textarea textarea-bordered w-full text-base leading-relaxed" rows="4" [(ngModel)]="adminMemo" placeholder="특이사항이나 통화 이력 등을 남겨주세요"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <div class="divider"></div>
+      }
+
+      <!-- 기본 정보 -->
+      <section>
+        <h4 class="font-bold text-lg mb-5">기업 및 담당자 정보</h4>
+        <div class="grid grid-cols-2 gap-y-6 gap-x-6 text-base">
+          <div class="form-control">
+            <label for="company-name" class="label pb-1"><span class="label-text text-base-content/50">회사명 *</span></label>
+            <input id="company-name" type="text" class="input input-bordered w-full" [(ngModel)]="companyName" placeholder="회사명 입력" />
+          </div>
+          <div class="form-control">
+            <label for="representative-name" class="label pb-1"><span class="label-text text-base-content/50">대표자명</span></label>
+            <input id="representative-name" type="text" class="input input-bordered w-full" [(ngModel)]="representativeName" placeholder="대표자명 입력" />
+          </div>
+          <div class="form-control col-span-2">
+            <label for="business-reg-number" class="label pb-1"><span class="label-text text-base-content/50">사업자등록번호</span></label>
+            <input id="business-reg-number" type="text" class="input input-bordered w-full font-mono" [(ngModel)]="businessRegNumber" placeholder="000-00-00000" />
+          </div>
+          <div class="form-control">
+            <label for="manager-name" class="label pb-1"><span class="label-text text-base-content/50">담당자 (이름/직급)</span></label>
+            <input id="manager-name" type="text" class="input input-bordered w-full" [(ngModel)]="managerName" placeholder="홍길동 대리" />
+          </div>
+          <div class="form-control">
+            <label for="contact" class="label pb-1"><span class="label-text text-base-content/50">담당자 연락처</span></label>
+            <input id="contact" type="text" class="input input-bordered w-full" [(ngModel)]="contact" placeholder="010-0000-0000" />
+          </div>
+          <div class="form-control col-span-2">
+            <label for="email" class="label pb-1"><span class="label-text text-base-content/50">세금계산서 수신 이메일</span></label>
+            <input id="email" type="email" class="input input-bordered w-full" [(ngModel)]="email" placeholder="email@example.com" />
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- 부스 신청 내역 -->
+      <section>
+        <h4 class="font-bold text-lg mb-5">부스 신청 내역</h4>
+        <div class="grid grid-cols-2 gap-y-6 gap-x-6 text-base bg-base-50 p-6 rounded-xl border border-base-200">
+          <div class="form-control col-span-2">
+            <label for="schedule-select" class="label pb-1">
+              <span class="label-text text-base-content/50">참가 박람회 *</span>
+              @if (isCoreDisabled()) { <span class="label-text-alt text-error">승인/결제 단계에서는 수정불가</span> }
+            </label>
+            <select id="schedule-select" class="select select-bordered w-full" [(ngModel)]="scheduleId" [disabled]="isCoreDisabled()">
+              @if (schedules().length === 0) {
+                <option [ngValue]="0">등록된 박람회 없음 — 박람회 관리에서 먼저 등록하세요</option>
+              } @else {
+                <option [ngValue]="0">박람회 선택</option>
+                @for (s of schedules(); track s.id) {
+                  <option [ngValue]="s.id">{{ s.fairName }} ({{ s.year }} {{ s.region }})</option>
+                }
+              }
+            </select>
+          </div>
+          <div class="form-control">
+            <label for="booth-type-select" class="label pb-1"><span class="label-text text-base-content/50">부스 타입</span></label>
+            <select id="booth-type-select" class="select select-bordered w-full" [(ngModel)]="boothType" (ngModelChange)="recalculateFee()" [disabled]="isCoreDisabled()">
+              <option value="SPACE_ONLY">독립 부스 (1,000,000원)</option>
+              <option value="SHELL_SCHEME">조립 부스 (1,500,000원)</option>
+              <option value="PREMIUM">프리미엄 부스 (2,500,000원)</option>
+            </select>
+          </div>
+          <div class="form-control">
+            <label for="booth-count-input" class="label pb-1"><span class="label-text text-base-content/50">신청 부스 수량 (개)</span></label>
+            <input id="booth-count-input" type="number" class="input input-bordered w-full" [(ngModel)]="boothCount" (ngModelChange)="recalculateFee()" min="1" [disabled]="isCoreDisabled()" />
+          </div>
+          <div class="form-control">
+            <label for="total-fee-input" class="label pb-1">
+              <span class="label-text text-base-content/50">총 결제 예정 금액 (원)</span>
+              <span class="label-text-alt text-primary font-medium">자동 계산됨</span>
+            </label>
+            <input id="total-fee-input" type="text" class="input input-bordered w-full font-bold text-primary bg-base-200" [value]="totalFee | number" readonly />
+          </div>
+          <div class="form-control col-span-2 mt-2">
+            <p class="label pb-1"><span class="label-text text-base-content/50">부대시설 옵션 신청</span></p>
+            <div class="flex flex-wrap gap-4 mt-1 bg-base-100 p-4 rounded-xl border border-base-200">
+              @for (opt of availableOptions; track opt.value) {
+                <label class="cursor-pointer label justify-start gap-2 p-0 hover:opacity-80 transition-opacity"
+                       [class.opacity-50]="isCoreDisabled()">
+                  <input type="checkbox" class="checkbox checkbox-sm checkbox-primary"
+                         [checked]="selectedOptions.includes(opt.value)"
+                         [disabled]="isCoreDisabled()"
+                         (change)="toggleOption(opt.value)" />
+                  <span class="label-text">{{ opt.label }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+
+      @if (errorMsg()) {
+        <p class="text-error text-sm">{{ errorMsg() }}</p>
+      }
+
+      <!-- 저장 버튼 -->
+      <div class="flex gap-3 pt-6 border-t border-base-200">
+        <button class="btn btn-outline flex-1" (click)="goBack()">목록으로</button>
+        <button class="btn btn-primary flex-1" [disabled]="loading()" (click)="save()">
+          {{ loading() ? '저장 중...' : '저장하기' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

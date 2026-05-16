@@ -10,11 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 import { FaqResponseDto } from '../../models/faq-response-dto';
 
 export interface FaqControllerTogglePin$Params {
+  id: number;
 }
 
-export function faqControllerTogglePin(http: HttpClient, rootUrl: string, params?: FaqControllerTogglePin$Params, context?: HttpContext): Observable<StrictHttpResponse<FaqResponseDto>> {
+export function faqControllerTogglePin(http: HttpClient, rootUrl: string, params: FaqControllerTogglePin$Params, context?: HttpContext): Observable<StrictHttpResponse<FaqResponseDto>> {
   const rb = new RequestBuilder(rootUrl, faqControllerTogglePin.PATH, 'patch');
   if (params) {
+    rb.path('id', params.id, {});
   }
 
   return http.request(

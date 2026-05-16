@@ -46,7 +46,10 @@ app.use('/**', (req, res, next) => {
     .then((response) =>
       response ? writeResponseToNodeResponse(response, res) : next()
     )
-    .catch(next);
+    .catch(() => {
+      // IP 접근 등 SSRF 보호 실패 시 CSR 폴백
+      res.sendFile(resolve(browserDistFolder, 'index.html'));
+    });
 });
 
 /**

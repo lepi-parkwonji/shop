@@ -7,7 +7,11 @@ import { NoticeModule } from './notice/notice.module';
 import { FaqModule } from './faq/faq.module';
 import { InquiryModule } from './inquiry/inquiry.module';
 import { GalleryModule } from './gallery/gallery.module';
+import { ScheduleModule } from './schedule/schedule.module';
+import { ExhibitorModule } from './exhibitor/exhibitor.module';
 import { PublicModule } from './public/public.module';
+import { CustomerModule } from './customer/customer.module';
+import { UploadModule } from './upload/upload.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -24,7 +28,11 @@ import { AppService } from './app.service';
     FaqModule,
     InquiryModule,
     GalleryModule,
+    ScheduleModule,
+    ExhibitorModule,
     PublicModule,
+    CustomerModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
