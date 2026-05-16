@@ -1,9 +1,10 @@
 import { DecimalPipe, NgClass, SlicePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SearchInputComponent, SearchSuggestion } from '@demo-shop/ui';
 import {
   ExhibitorResponseDto as ExhibitorDTO,
   exhibitorControllerRemove,
@@ -18,7 +19,7 @@ type ExhibitorStatus = 'PENDING' | 'WAITING_PAYMENT' | 'APPROVED' | 'CANCELED';
 
 @Component({
   selector: 'app-exhibitor-list',
-  imports: [FormsModule, SlicePipe, DecimalPipe, NgClass, PaginationComponent],
+  imports: [FormsModule, SlicePipe, DecimalPipe, NgClass, PaginationComponent, SearchInputComponent],
   templateUrl: './exhibitor-list.component.html',
 })
 export class ExhibitorListComponent {
@@ -32,6 +33,10 @@ export class ExhibitorListComponent {
   query = signal('');
   statusQuery = signal<ExhibitorStatus | ''>('');
   private searchTimer?: ReturnType<typeof setTimeout>;
+
+  suggestions = computed<SearchSuggestion[]>(() =>
+    (this.result()?.items ?? []).slice(0, 5).map(e => ({ id: e.id, label: e.companyName })),
+  );
 
   constructor() {
     this.load();
@@ -64,7 +69,11 @@ export class ExhibitorListComponent {
   }
 
   onStatusChange(value: string) { this.statusQuery.set(value as ExhibitorStatus | ''); this.pageNo.set(1); this.load(); }
-  onSearchImmediate() { clearTimeout(this.searchTimer); this.pageNo.set(1); this.load(); }
+  onSearch(value: string) { clearTimeout(this.searchTimer); this.query.set(value); this.pageNo.set(1); this.load(); }
+  onSelect(item: SearchSuggestion) {
+    const found = this.result()?.items.find(e => e.id === item.id);
+    if (found) this.openDetail(found);
+  }
   changePage(page: number) { this.pageNo.set(page); this.load(); }
 
   rowNumber(index: number): number {

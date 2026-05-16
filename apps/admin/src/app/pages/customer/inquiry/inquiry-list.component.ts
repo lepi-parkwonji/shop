@@ -1,9 +1,9 @@
 import { NgClass, SlicePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SearchInputComponent, SearchSuggestion } from '@demo-shop/ui';
 import {
   InquiryResponseDto as InquiryDTO,
   inquiryControllerRemove,
@@ -17,7 +17,7 @@ import { PaginationComponent } from '../../../shared/pagination.component';
 
 @Component({
   selector: 'app-inquiry-list',
-  imports: [FormsModule, SlicePipe, NgClass, PaginationComponent],
+  imports: [SlicePipe, NgClass, PaginationComponent, SearchInputComponent],
   templateUrl: './inquiry-list.component.html',
 })
 export class InquiryListComponent {
@@ -30,6 +30,10 @@ export class InquiryListComponent {
   pageNo = signal(1);
   query = signal('');
   private searchTimer?: ReturnType<typeof setTimeout>;
+
+  suggestions = computed<SearchSuggestion[]>(() =>
+    (this.result()?.items ?? []).slice(0, 5).map(i => ({ id: i.id, label: i.title })),
+  );
 
   constructor() {
     this.load();
@@ -52,7 +56,11 @@ export class InquiryListComponent {
     this.searchTimer = setTimeout(() => { this.pageNo.set(1); this.load(); }, 400);
   }
 
-  onSearchImmediate() { clearTimeout(this.searchTimer); this.pageNo.set(1); this.load(); }
+  onSearch(value: string) { clearTimeout(this.searchTimer); this.query.set(value); this.pageNo.set(1); this.load(); }
+  onSelect(item: SearchSuggestion) {
+    const found = this.result()?.items.find(i => i.id === item.id);
+    if (found) this.navigateToAnswer(found);
+  }
   changePage(page: number) { this.pageNo.set(page); this.load(); }
 
   rowNumber(index: number): number {

@@ -14,15 +14,14 @@
       <option value="WAITING_PAYMENT">입금 대기</option>
       <option value="APPROVED">승인 완료</option>
     </select>
-    <input
-      class="input input-bordered flex-1 input-sm min-w-0"
-      type="text"
-      [ngModel]="query()"
-      (ngModelChange)="onQueryChange($event)"
+    <app-search-input
+      class="flex-1 min-w-0"
       placeholder="업체명, 담당자명 또는 연락처 검색"
-      (keydown.enter)="onSearchImmediate()"
+      [suggestions]="suggestions()"
+      (queryChange)="onQueryChange($event)"
+      (search)="onSearch($event)"
+      (select)="onSelect($event)"
     />
-    <button class="btn btn-outline btn-sm shrink-0" (click)="onSearchImmediate()">검색</button>
   </div>
 
   <div class="card bg-base-100 shadow-sm overflow-hidden">
