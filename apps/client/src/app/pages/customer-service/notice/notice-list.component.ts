@@ -1,24 +1,29 @@
 import { SlicePipe } from '@angular/common';
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { NoticeDTO, PaginatedResult, PublicApiService } from '../../../services/public-api.service';
 import { PaginationComponent } from '../../../shared/pagination.component';
+import { SearchInputComponent, SearchSuggestion } from '@demo-shop/ui';
 
 @Component({
   selector: 'app-notice-list',
-  imports: [FormsModule, SlicePipe, RouterLink, PaginationComponent],
+  imports: [SlicePipe, RouterLink, PaginationComponent, SearchInputComponent],
   templateUrl: './notice-list.component.html',
 })
 export class NoticeListComponent {
   private api = inject(PublicApiService);
   private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
   result = signal<PaginatedResult<NoticeDTO> | null>(null);
   pageNo = signal(1);
   query = signal('');
   private searchTimer?: ReturnType<typeof setTimeout>;
+
+  suggestions = computed<SearchSuggestion[]>(() =>
+    (this.result()?.items ?? []).slice(0, 5).map(n => ({ id: n.id, label: n.title })),
+  );
 
   constructor() {
     this.load();
@@ -37,6 +42,16 @@ export class NoticeListComponent {
     this.searchTimer = setTimeout(() => { this.pageNo.set(1); this.load(); }, 400);
   }
 
-  onSearchImmediate() { clearTimeout(this.searchTimer); this.pageNo.set(1); this.load(); }
+  onSearch(value: string) {
+    clearTimeout(this.searchTimer);
+    this.query.set(value);
+    this.pageNo.set(1);
+    this.load();
+  }
+
+  onSelect(item: SearchSuggestion) {
+    this.router.navigate(['/customer-service/notice', item.id]);
+  }
+
   changePage(page: number) { this.pageNo.set(page); this.load(); }
 }
