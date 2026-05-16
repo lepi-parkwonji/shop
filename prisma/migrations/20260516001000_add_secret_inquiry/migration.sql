@@ -1,0 +1,3 @@
+ALTER TABLE "Inquiry" ADD COLUMN "isSecret" BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE "Inquiry" ADD COLUMN "customerId" INTEGER;
+ALTER TABLE "Inquiry" ADD CONSTRAINT "Inquiry_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
