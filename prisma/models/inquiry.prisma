@@ -1,0 +1,13 @@
+/// 1:1 문의
+model Inquiry {
+  id          Int       @id @default(autoincrement())
+  title       String
+  content     String
+  authorName  String
+  answer      String?
+  isAnswered  Boolean   @default(false)
+  isExposed   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+}

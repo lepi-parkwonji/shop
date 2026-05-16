@@ -3,7 +3,7 @@ const { join } = require('path');
 
 module.exports = {
   output: {
-    path: join(__dirname, '../../dist/apps/api'),
+    path: join(__dirname, '../../dist/apps/server'),
     clean: true,
     ...(process.env.NODE_ENV !== 'production' && {
       devtoolModuleFilenameTemplate: '[absolute-resource-path]',
@@ -20,6 +20,9 @@ module.exports = {
       outputHashing: 'none',
       generatePackageJson: true,
       sourceMap: true,
+      transformers: [
+        { name: '@nestjs/swagger/plugin', options: { classValidatorShim: true, introspectComments: true } },
+      ],
     }),
   ],
 };

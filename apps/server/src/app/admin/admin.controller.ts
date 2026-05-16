@@ -1,43 +1,39 @@
-import { Body, Controller, Get, Post, UnauthorizedException } from '@nestjs/common';
-import { plainToInstance } from 'class-transformer';
-import { PrismaService } from '../../prisma/prisma.service';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { ApiBody, ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../libs/decorators/auth.decorator';
 import { ReqAdmin } from '../../libs/decorators/req-admin.decorator';
+import type { JwtPayload } from './guards/admin-auth.guard';
 import { TokensDTO } from '../../libs/dtos/tokens.dto';
-import { AuthUtil } from '../auth/auth.util';
 import { AdminDTO } from './dtos/admin.dto';
 import { AdminSignInDTO } from './dtos/admin-sign-in.dto';
+import { AdminService } from './admin.service';
 
+@ApiTags('admin')
 @Controller('admin')
 export class AdminController {
-  constructor(private prisma: PrismaService, private authUtil: AuthUtil) {}
+  constructor(private adminService: AdminService) {}
 
+  @ApiOkResponse({ type: TokensDTO }) @ApiBody({ type: AdminSignInDTO })
   @Post('signin')
-  async signin(@Body() body: AdminSignInDTO): Promise<TokensDTO> {
-    const admin = await this.prisma.admin.findUnique({ where: { usrname: body.usrname } });
-    if (!admin || !this.authUtil.compareHash(body.password, admin.password))
-      throw new UnauthorizedException('아이디 또는 비밀번호가 올바르지 않습니다.');
-
-    return {
-      accessToken: this.authUtil.createToken({ sub: admin.id }, '1h'),
-      refreshToken: this.authUtil.createToken({ sub: admin.id }, '7d'),
-    };
+  signin(@Body() body: AdminSignInDTO): Promise<TokensDTO> {
+    return this.adminService.signin(body);
   }
 
+  @ApiBearerAuth() @ApiOkResponse({ type: AdminDTO })
   @Get('me')
   @Auth()
-  async me(@ReqAdmin() payload: { sub: number }): Promise<AdminDTO> {
-    const admin = await this.prisma.admin.findUnique({ where: { id: payload.sub } });
-    if (!admin) throw new UnauthorizedException();
-    return plainToInstance(AdminDTO, admin);
+  me(@ReqAdmin() payload: JwtPayload): Promise<AdminDTO> {
+    return this.adminService.getMe(payload.sub);
   }
 
+  @ApiBearerAuth() @ApiOkResponse({ schema: { properties: { accessToken: { type: 'string' } } } })
   @Post('refresh')
   @Auth()
-  refresh(@ReqAdmin() payload: { sub: number }): Pick<TokensDTO, 'accessToken'> {
-    return { accessToken: this.authUtil.createToken({ sub: payload.sub }, '1h') };
+  refresh(@ReqAdmin() payload: JwtPayload): Pick<TokensDTO, 'accessToken'> {
+    return this.adminService.createAccessToken(payload.sub);
   }
 
+  @ApiBearerAuth() @ApiOkResponse({ schema: { properties: { message: { type: 'string' } } } })
   @Post('logout')
   @Auth()
   logout(): { message: string } {

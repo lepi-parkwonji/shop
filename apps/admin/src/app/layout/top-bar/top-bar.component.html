@@ -1,0 +1,11 @@
+<header class="navbar bg-neutral text-neutral-content fixed top-0 left-0 right-0 z-50 h-14 min-h-14 px-6">
+  <div class="flex-1">
+    <a class="text-base font-bold hover:opacity-80" routerLink="/dashboard">관리자 페이지</a>
+  </div>
+  <div class="flex items-center gap-4">
+    <span class="text-sm text-neutral-content/60">{{ authService.user()?.displayName }}</span>
+    <button class="btn btn-sm btn-outline btn-neutral-content" (click)="authService.logout()">
+      로그아웃
+    </button>
+  </div>
+</header>

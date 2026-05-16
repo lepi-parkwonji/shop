@@ -58,6 +58,17 @@ vitest.config.*.timestamp*
 apps/server/.env
 .env
 .env.*
+!apps/client/.env
 
 # cursor IDE
 .cursor/
+
+# uploaded files (runtime)
+/uploads/
+
+# codex AI tool
+.codex/
+
+# temporary test scripts
+test-admin.ts
+test-customers.ts

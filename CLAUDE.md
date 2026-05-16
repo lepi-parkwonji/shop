@@ -21,3 +21,9 @@
 - The `nx-generate` skill handles generator discovery internally - don't call nx_docs just to look up generator syntax
 
 <!-- nx configuration end-->
+
+## admin 앱 번들 기준 (2026-05-14 측정)
+
+- 초기 번들: ~343 KB (transfer ~83 KB)
+- Tiptap (gallery-form lazy chunk): ~379 KB (transfer ~103 KB) — `/event/gallery/new`, `/event/gallery/:id/edit` 진입 시에만 로드
+- 각 페이지 컴포넌트: 2–7 KB (모두 `loadComponent`로 lazy 분리)

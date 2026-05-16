@@ -1,0 +1,36 @@
+enum ExhibitorStatus {
+  PENDING
+  WAITING_PAYMENT
+  APPROVED
+  CANCELED
+}
+
+enum BoothType {
+  SPACE_ONLY
+  SHELL_SCHEME
+  PREMIUM
+}
+
+/// 참가 업체
+model Exhibitor {
+  id                 Int             @id @default(autoincrement())
+  companyName        String
+  representativeName String
+  businessRegNumber  String
+  managerName        String
+  contact            String
+  email              String
+  scheduleId         Int
+  schedule           Schedule        @relation(fields: [scheduleId], references: [id])
+  boothType          BoothType       @default(SPACE_ONLY)
+  boothCount         Int             @default(1)
+  options            String[]        @default([])
+  totalFee           Int             @default(0)
+  status             ExhibitorStatus @default(PENDING)
+  boothNumber        String?
+  adminMemo          String?
+  isExposed          Boolean         @default(false)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  deletedAt          DateTime?
+}

@@ -1,0 +1,43 @@
+<div class="w-full max-w-4xl">
+  <div class="mb-5">
+    <h2 class="text-xl font-bold">{{ isEdit ? 'FAQ 수정' : 'FAQ 등록' }}</h2>
+  </div>
+
+  <div class="card bg-base-100 shadow-sm min-h-[44rem]">
+    <div class="card-body gap-4 flex flex-col">
+      <label class="form-control">
+        <div class="label px-0 pb-2">
+          <span class="label-text font-medium">질문 *</span>
+          <span class="label-text-alt" [class.text-error]="question.length >= QUESTION_MAX">
+            {{ question.length }} / {{ QUESTION_MAX }}
+          </span>
+        </div>
+        <input
+          class="input input-bordered w-full"
+          type="text"
+          [(ngModel)]="question"
+          placeholder="질문을 입력하세요"
+          [maxlength]="QUESTION_MAX"
+        />
+      </label>
+
+      <div class="form-control">
+        <div class="label px-0 pb-2">
+          <span class="label-text font-medium">답변 *</span>
+        </div>
+        <app-rich-editor [(content)]="answer" />
+      </div>
+
+      @if (errorMsg()) {
+        <p class="text-error text-sm">{{ errorMsg() }}</p>
+      }
+
+      <div class="flex justify-end gap-2 pt-2 mt-auto">
+        <button class="btn btn-ghost" (click)="navigateBack()">취소</button>
+        <button class="btn btn-primary" [disabled]="loading()" (click)="onSubmit()">
+          {{ loading() ? '저장 중...' : '저장' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

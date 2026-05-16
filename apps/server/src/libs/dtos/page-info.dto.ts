@@ -1,6 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export class PageInfoDTO {
-  pageNo: number;
-  pageSize: number;
-  totalItems: number;
-  totalPages: number;
+  @ApiProperty({ type: Number }) pageNo!: number;
+  @ApiProperty({ type: Number }) pageSize!: number;
+  @ApiProperty({ type: Number }) totalItems!: number;
+  @ApiProperty({ type: Number }) totalPages!: number;
 }

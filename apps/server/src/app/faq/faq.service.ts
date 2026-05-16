@@ -1,19 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Faq, Prisma } from '@generated/prisma';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OffsetPaginationDTO } from '../../libs/dtos/offset-pagination.dto';
 import { OffsetSearchOptionDTO } from '../../libs/dtos/search-option.dto';
 import { CreateFaqDTO } from './dtos/create-faq.dto';
 import { UpdateFaqDTO } from './dtos/update-faq.dto';
 
+const SYSTEM_AUTHOR_ID = 1;
+
 @Injectable()
 export class FaqService {
   constructor(private prisma: PrismaService) {}
 
-  async search(dto: OffsetSearchOptionDTO): Promise<OffsetPaginationDTO<object>> {
-    const { pageNo, pageSize, query } = dto;
-    const skip = (pageNo - 1) * pageSize;
-
-    const where = {
+  private buildSearchWhere(query?: string): Prisma.FaqWhereInput {
+    return {
       deletedAt: null,
       ...(query && {
         OR: [
@@ -22,7 +22,14 @@ export class FaqService {
         ],
       }),
     };
+  }
 
+  private async paginate(
+    where: Prisma.FaqWhereInput,
+    pageNo: number,
+    pageSize: number,
+  ): Promise<OffsetPaginationDTO<Faq>> {
+    const skip = (pageNo - 1) * pageSize;
     const [totalItems, items] = await Promise.all([
       this.prisma.faq.count({ where }),
       this.prisma.faq.findMany({
@@ -32,11 +39,20 @@ export class FaqService {
         orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
       }),
     ]);
-
     return {
       items,
       pageInfo: { pageNo, pageSize, totalItems, totalPages: Math.ceil(totalItems / pageSize) },
     };
+  }
+
+  async search(dto: OffsetSearchOptionDTO): Promise<OffsetPaginationDTO<Faq>> {
+    const { pageNo, pageSize, query } = dto;
+    return this.paginate(this.buildSearchWhere(query), pageNo, pageSize);
+  }
+
+  async searchPublic(dto: OffsetSearchOptionDTO): Promise<OffsetPaginationDTO<Faq>> {
+    const { pageNo, pageSize, query } = dto;
+    return this.paginate({ ...this.buildSearchWhere(query), isExposed: true }, pageNo, pageSize);
   }
 
   async findOne(id: number) {
@@ -45,8 +61,16 @@ export class FaqService {
     return faq;
   }
 
+  async findOnePublic(id: number) {
+    const faq = await this.prisma.faq.findFirst({
+      where: { id, deletedAt: null, isExposed: true },
+    });
+    if (!faq) throw new NotFoundException('FAQ를 찾을 수 없습니다.');
+    return faq;
+  }
+
   async create(dto: CreateFaqDTO) {
-    return this.prisma.faq.create({ data: { ...dto, authorId: 1 } });
+    return this.prisma.faq.create({ data: { ...dto, authorId: SYSTEM_AUTHOR_ID } });
   }
 
   async update(id: number, dto: UpdateFaqDTO) {
@@ -67,44 +91,5 @@ export class FaqService {
   async toggleExpose(id: number) {
     const faq = await this.findOne(id);
     return this.prisma.faq.update({ where: { id }, data: { isExposed: !faq.isExposed } });
-  }
-
-  async searchPublic(dto: OffsetSearchOptionDTO): Promise<OffsetPaginationDTO<object>> {
-    const { pageNo, pageSize, query } = dto;
-    const skip = (pageNo - 1) * pageSize;
-
-    const where = {
-      deletedAt: null,
-      isExposed: true,
-      ...(query && {
-        OR: [
-          { question: { contains: query } },
-          { answer: { contains: query } },
-        ],
-      }),
-    };
-
-    const [totalItems, items] = await Promise.all([
-      this.prisma.faq.count({ where }),
-      this.prisma.faq.findMany({
-        where,
-        skip,
-        take: pageSize,
-        orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
-      }),
-    ]);
-
-    return {
-      items,
-      pageInfo: { pageNo, pageSize, totalItems, totalPages: Math.ceil(totalItems / pageSize) },
-    };
-  }
-
-  async findOnePublic(id: number) {
-    const faq = await this.prisma.faq.findFirst({
-      where: { id, deletedAt: null, isExposed: true },
-    });
-    if (!faq) throw new NotFoundException('FAQ를 찾을 수 없습니다.');
-    return faq;
   }
 }

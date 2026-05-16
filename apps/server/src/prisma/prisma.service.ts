@@ -11,6 +11,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   }
 
   async onModuleInit() {
+    if (process.env['SWAGGER_GEN']) return;
     await this.$connect();
     await this.$executeRaw`SET TIME ZONE 'Asia/Seoul'`;
   }

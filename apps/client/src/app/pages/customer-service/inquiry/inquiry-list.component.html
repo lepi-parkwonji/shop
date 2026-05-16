@@ -1,0 +1,64 @@
+<div>
+  @if (needLogin()) {
+    <div class="alert alert-warning mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z"/>
+      </svg>
+      <span>문의 등록은 로그인 후 이용 가능합니다. 상단의 <strong>로그인</strong> 버튼을 눌러주세요.</span>
+    </div>
+  }
+  <div class="flex gap-2 mb-4">
+    <input
+      name="query"
+      class="input input-bordered flex-1 input-sm min-w-0 max-w-md"
+      type="text"
+      [ngModel]="query()"
+      (ngModelChange)="onQueryChange($event)"
+      placeholder="제목 검색"
+      (keydown.enter)="onSearchImmediate()"
+    />
+    <button class="btn btn-outline btn-sm shrink-0" (click)="onSearchImmediate()">검색</button>
+    <a class="btn btn-primary btn-sm shrink-0" routerLink="new">문의 등록</a>
+  </div>
+
+  <div class="card bg-base-100 shadow-sm">
+    <table class="table table-zebra">
+      <thead>
+        <tr>
+          <th class="w-16 hidden sm:table-cell">번호</th>
+          <th>제목</th>
+          <th class="w-32 hidden sm:table-cell">작성자</th>
+          <th class="w-28 hidden sm:table-cell">작성일</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of result()?.items; track item.id) {
+          <tr class="cursor-pointer hover" [routerLink]="[item.id]">
+            <td class="text-sm text-base-content/50 hidden sm:table-cell">{{ item.id }}</td>
+            <td>
+              <span class="font-medium">{{ item.title }}</span>
+              @if (item.isAnswered) {
+                <span class="badge badge-success badge-xs ml-2 text-white">답변완료</span>
+              } @else {
+                <span class="badge badge-ghost badge-xs ml-2">대기중</span>
+              }
+            </td>
+            <td class="text-sm text-base-content/60 hidden sm:table-cell">{{ item.authorName }}</td>
+            <td class="text-sm text-base-content/60 hidden sm:table-cell">{{ item.createdAt | date:'yyyy-MM-dd' }}</td>
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="text-center text-base-content/40 py-10">등록된 문의내역이 없습니다.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (result(); as pagedResult) {
+    <app-pagination
+      [pageNo]="pageNo()"
+      [totalPages]="pagedResult.pageInfo.totalPages"
+      [totalItems]="pagedResult.pageInfo.totalItems"
+      (pageChange)="changePage($event)"
+    />
+  }
+</div>
