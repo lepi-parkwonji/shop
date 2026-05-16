@@ -1,9 +1,9 @@
 import { SlicePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SearchInputComponent, SearchSuggestion } from '@demo-shop/ui';
 import {
   GalleryResponseDto as GalleryDTO,
   galleryControllerRemove,
@@ -16,7 +16,7 @@ import { PaginationComponent } from '../../../shared/pagination.component';
 
 @Component({
   selector: 'app-gallery-list',
-  imports: [FormsModule, SlicePipe, PaginationComponent],
+  imports: [SlicePipe, PaginationComponent, SearchInputComponent],
   templateUrl: './gallery-list.component.html',
 })
 export class GalleryListComponent {
@@ -29,6 +29,10 @@ export class GalleryListComponent {
   pageNo = signal(1);
   query = signal('');
   private searchTimer?: ReturnType<typeof setTimeout>;
+
+  suggestions = computed<SearchSuggestion[]>(() =>
+    (this.result()?.items ?? []).slice(0, 5).map(g => ({ id: g.id, label: g.title })),
+  );
 
   constructor() {
     this.load();
@@ -55,7 +59,11 @@ export class GalleryListComponent {
     this.searchTimer = setTimeout(() => { this.pageNo.set(1); this.load(); }, 400);
   }
 
-  onSearchImmediate() { clearTimeout(this.searchTimer); this.pageNo.set(1); this.load(); }
+  onSearch(value: string) { clearTimeout(this.searchTimer); this.query.set(value); this.pageNo.set(1); this.load(); }
+  onSelect(item: SearchSuggestion) {
+    const found = this.result()?.items.find(g => g.id === item.id);
+    if (found) this.navigateToEdit(found);
+  }
   changePage(page: number) { this.pageNo.set(page); this.load(); }
 
   rowNumber(index: number): number {
