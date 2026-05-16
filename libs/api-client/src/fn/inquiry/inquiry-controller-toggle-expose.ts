@@ -10,11 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 import { InquiryResponseDto } from '../../models/inquiry-response-dto';
 
 export interface InquiryControllerToggleExpose$Params {
+  id: number;
 }
 
-export function inquiryControllerToggleExpose(http: HttpClient, rootUrl: string, params?: InquiryControllerToggleExpose$Params, context?: HttpContext): Observable<StrictHttpResponse<InquiryResponseDto>> {
+export function inquiryControllerToggleExpose(http: HttpClient, rootUrl: string, params: InquiryControllerToggleExpose$Params, context?: HttpContext): Observable<StrictHttpResponse<InquiryResponseDto>> {
   const rb = new RequestBuilder(rootUrl, inquiryControllerToggleExpose.PATH, 'patch');
   if (params) {
+    rb.path('id', params.id, {});
   }
 
   return http.request(

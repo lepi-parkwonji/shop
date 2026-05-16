@@ -21,21 +21,12 @@
         />
       </label>
 
-      <label class="form-control">
+      <div class="form-control">
         <div class="label px-0 pb-2">
           <span class="label-text font-medium">내용 *</span>
-          <span class="label-text-alt" [class.text-error]="content.length >= CONTENT_MAX">
-            {{ content.length }} / {{ CONTENT_MAX }}
-          </span>
         </div>
-        <textarea
-          class="textarea textarea-bordered w-full font-mono text-sm leading-relaxed"
-          style="min-height: 30rem; resize: vertical;"
-          [(ngModel)]="content"
-          placeholder="내용을 입력하세요"
-          [maxlength]="CONTENT_MAX"
-        ></textarea>
-      </label>
+        <app-rich-editor [(content)]="content" />
+      </div>
 
       @if (errorMsg()) {
         <p class="text-error text-sm">{{ errorMsg() }}</p>

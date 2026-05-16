@@ -10,11 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 import { FaqResponseDto } from '../../models/faq-response-dto';
 
 export interface FaqControllerFindOne$Params {
+  id: number;
 }
 
-export function faqControllerFindOne(http: HttpClient, rootUrl: string, params?: FaqControllerFindOne$Params, context?: HttpContext): Observable<StrictHttpResponse<FaqResponseDto>> {
+export function faqControllerFindOne(http: HttpClient, rootUrl: string, params: FaqControllerFindOne$Params, context?: HttpContext): Observable<StrictHttpResponse<FaqResponseDto>> {
   const rb = new RequestBuilder(rootUrl, faqControllerFindOne.PATH, 'get');
   if (params) {
+    rb.path('id', params.id, {});
   }
 
   return http.request(

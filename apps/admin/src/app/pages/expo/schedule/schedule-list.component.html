@@ -1,0 +1,213 @@
+<div class="w-full max-w-6xl">
+  <div class="flex justify-between items-center mb-5">
+    <h2 class="text-xl font-bold">박람회 관리</h2>
+    <button class="btn btn-primary btn-sm" (click)="navigateToNew()">
+      + 박람회 등록
+    </button>
+  </div>
+
+  <div class="flex gap-2 mb-4">
+    <select class="select select-bordered select-sm w-32" [ngModel]="yearQuery()" (ngModelChange)="onYearChange($event)">
+      <option value="">연도 전체</option>
+      <option value="2026">2026년</option>
+      <option value="2025">2025년</option>
+    </select>
+    <select class="select select-bordered select-sm w-32" [ngModel]="regionQuery()" (ngModelChange)="onRegionChange($event)">
+      <option value="">지역 전체</option>
+      <option value="서울">서울</option>
+      <option value="고양">고양</option>
+      <option value="부산">부산</option>
+      <option value="광주">광주</option>
+      <option value="대구">대구</option>
+    </select>
+    <select class="select select-bordered select-sm w-32" [ngModel]="statusQuery()" (ngModelChange)="onStatusChange($event)">
+      <option value="">전체 상태</option>
+      <option value="PENDING">대기</option>
+      <option value="ONGOING">진행 중</option>
+      <option value="FINISHED">마감</option>
+      <option value="CANCELLED">취소</option>
+    </select>
+    <input
+      class="input input-bordered flex-1 input-sm min-w-0"
+      type="text"
+      [ngModel]="query()"
+      (ngModelChange)="onQueryChange($event)"
+      placeholder="박람회명 검색"
+      (keydown.enter)="onSearchImmediate()"
+    />
+    <button class="btn btn-outline btn-sm shrink-0" (click)="onSearchImmediate()">검색</button>
+  </div>
+
+  <div class="card bg-base-100 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="table table-zebra table-fixed w-full">
+        <thead>
+          <tr>
+            <th class="w-14 text-center">번호</th>
+            <th class="w-20 text-center">개최 상태</th>
+            <th class="w-64">박람회명</th>
+            <th class="w-48 hidden md:table-cell">기간 및 장소</th>
+            <th class="w-24 text-center">신청 인원</th>
+            <th class="w-24 text-right">입장료</th>
+            <th class="w-16 text-center">관리</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of result()?.items ?? []; track item.id; let idx = $index) {
+            <tr class="hover cursor-pointer" (click)="openDrawer(item)">
+              <td class="text-sm text-base-content/50 text-center">{{ rowNumber(idx) }}</td>
+              <td class="text-center">
+                @if (item.status === 'PENDING') { <span class="badge badge-outline badge-sm">대기</span> }
+                @if (item.status === 'ONGOING') { <span class="badge badge-info badge-sm">진행</span> }
+                @if (item.status === 'FINISHED') { <span class="badge badge-success badge-sm text-white">마감</span> }
+                @if (item.status === 'CANCELLED') { <span class="badge badge-error badge-sm text-white">취소</span> }
+              </td>
+              <td>
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="badge badge-primary badge-sm badge-outline font-medium">[{{ item.year }} {{ item.region }}]</span>
+                  <div class="font-medium truncate text-primary">{{ item.fairName }}</div>
+                </div>
+                <div class="text-xs text-base-content/50">{{ item.type }}</div>
+              </td>
+              <td class="text-sm hidden md:table-cell text-base-content/70">
+                <div>{{ item.startTime | slice:5:10 }} ~ {{ item.endTime | slice:5:10 }}</div>
+                <div class="text-xs mt-1">{{ item.place }}</div>
+              </td>
+              <td class="text-center">
+                <div class="badge badge-ghost badge-sm">{{ item.visitorCount | number }}명</div>
+              </td>
+              <td class="text-right text-sm font-medium">
+                @if (item.entranceFee === 0) {
+                  <span class="text-success">무료</span>
+                } @else {
+                  {{ item.entranceFee | number }}원
+                }
+              </td>
+              <td class="text-center">
+                <button class="btn btn-xs btn-error btn-outline whitespace-nowrap" (click)="remove(item, $event)">삭제</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="8" class="text-center text-base-content/40 py-10">등록된 박람회가 없습니다.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  @if (result(); as pagedResult) {
+    <div class="mt-4 flex justify-center">
+      <app-pagination
+        [pageNo]="pageNo()"
+        [totalPages]="pagedResult.pageInfo.totalPages"
+        [totalItems]="pagedResult.pageInfo.totalItems"
+        (pageChange)="changePage($event)"
+      ></app-pagination>
+    </div>
+  }
+</div>
+
+@if (selectedItem(); as item) {
+  <div class="fixed inset-0 z-50 flex justify-end bg-black/20 transition-opacity" (click)="closeDrawer()">
+    <!-- Drawer Panel -->
+    <div class="w-[450px] bg-base-100 h-full shadow-2xl flex flex-col transform transition-transform duration-300" (click)="$event.stopPropagation()">
+      <!-- Header -->
+      <div class="flex items-center justify-between p-4 border-b">
+        <h3 class="font-bold text-lg">박람회 상세 정보</h3>
+        <button class="btn btn-sm btn-ghost btn-circle" (click)="closeDrawer()">✕</button>
+      </div>
+
+      <!-- Body -->
+      <div class="flex-1 overflow-y-auto p-5 space-y-6">
+        
+        <!-- 행사장/시간 정보 -->
+        <div>
+          <h4 class="text-sm font-semibold text-base-content/50 mb-3 uppercase tracking-wider">기본 정보</h4>
+          <div class="bg-base-200/50 p-4 rounded-xl space-y-3">
+            <div>
+              <div class="text-xs text-base-content/60">차수 및 지역</div>
+              <div class="font-bold text-primary">[{{ item.year }} {{ item.region }}]</div>
+            </div>
+            <div>
+              <div class="text-xs text-base-content/60">박람회명</div>
+              <div class="font-bold text-base">{{ item.fairName }}</div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <div class="text-xs text-base-content/60">행사 기간</div>
+                <div class="font-medium text-sm">{{ item.startTime | slice:0:10 }} ~ {{ item.endTime | slice:0:10 }}</div>
+              </div>
+              <div>
+                <div class="text-xs text-base-content/60">장소</div>
+                <div class="font-medium text-sm">{{ item.place }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 운영 상태 설정 폼 -->
+        <div>
+          <h4 class="text-sm font-semibold text-base-content/50 mb-3 uppercase tracking-wider">운영 관리</h4>
+          <div class="bg-base-100 border p-4 rounded-xl space-y-4">
+            
+            <div class="form-control">
+              <label class="label pb-1" for="statusSelect">
+                <span class="label-text font-medium">진행 상태</span>
+              </label>
+              <select id="statusSelect" class="select select-bordered select-sm w-full" [(ngModel)]="item.status">
+                <option value="PENDING">대기</option>
+                <option value="ONGOING">진행 중</option>
+                <option value="FINISHED">마감</option>
+                <option value="CANCELLED">취소</option>
+              </select>
+            </div>
+            
+            <div class="form-control">
+              <label class="label pb-1" for="exposeCheck">
+                <span class="label-text font-medium">앱/웹사이트 공개 여부</span>
+                <input id="exposeCheck" type="checkbox" class="toggle toggle-success toggle-sm" [(ngModel)]="item.isExposed" />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- 상세 설명 및 유의사항 -->
+        <div>
+          <h4 class="text-sm font-semibold text-base-content/50 mb-3 uppercase tracking-wider">세부 내용</h4>
+          <div class="space-y-4">
+            
+            <div>
+              <label class="label pb-1" for="detailsInput">
+                <span class="label-text font-medium text-xs">상세 설명</span>
+              </label>
+              <textarea id="detailsInput" class="textarea textarea-bordered w-full text-sm leading-relaxed" rows="3" [(ngModel)]="item.details" placeholder="박람회 상세 설명"></textarea>
+            </div>
+            
+            <div>
+              <label class="label pb-1" for="noticeInput">
+                <span class="label-text font-medium text-xs">유의사항</span>
+              </label>
+              <textarea id="noticeInput" class="textarea textarea-bordered w-full text-sm" rows="2" [(ngModel)]="item.notice" placeholder="유의사항 입력"></textarea>
+            </div>
+
+            <div>
+              <label class="label pb-1" for="eventNotesInput">
+                <span class="label-text font-medium text-xs">프로모션 / 이벤트 안내</span>
+              </label>
+              <textarea id="eventNotesInput" class="textarea textarea-bordered w-full text-sm" rows="2" [(ngModel)]="item.eventNotes" placeholder="프로모션 내용 입력"></textarea>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="p-4 border-t bg-base-50 flex gap-2 justify-end">
+        <button class="btn btn-outline flex-1" (click)="closeDrawer()">닫기</button>
+        <button class="btn btn-primary flex-1" [disabled]="drawerLoading()" (click)="saveDrawer()">
+          {{ drawerLoading() ? '저장 중...' : '저장' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

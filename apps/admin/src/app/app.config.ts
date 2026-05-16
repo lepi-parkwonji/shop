@@ -1,7 +1,7 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-import { authInterceptor } from './interceptors/auth.interceptor';
+import { authInterceptor } from './auth/auth.interceptor';
 import { appRoutes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {

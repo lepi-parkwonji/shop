@@ -11,12 +11,14 @@ import { GalleryResponseDto } from '../../models/gallery-response-dto';
 import { UpdateGalleryDto } from '../../models/update-gallery-dto';
 
 export interface GalleryControllerUpdate$Params {
+  id: number;
       body: UpdateGalleryDto
 }
 
 export function galleryControllerUpdate(http: HttpClient, rootUrl: string, params: GalleryControllerUpdate$Params, context?: HttpContext): Observable<StrictHttpResponse<GalleryResponseDto>> {
   const rb = new RequestBuilder(rootUrl, galleryControllerUpdate.PATH, 'patch');
   if (params) {
+    rb.path('id', params.id, {});
     rb.body(params.body, 'application/json');
   }
 

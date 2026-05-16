@@ -49,6 +49,15 @@ export class InquiryService {
     return this.paginate(this.buildSearchWhere(query), pageNo, pageSize);
   }
 
+  async searchPublic(dto: OffsetSearchOptionDTO): Promise<OffsetPaginationDTO<Inquiry>> {
+    const { pageNo, pageSize, query } = dto;
+    const where: Prisma.InquiryWhereInput = {
+      ...this.buildSearchWhere(query),
+      isExposed: true,
+    };
+    return this.paginate(where, pageNo, pageSize);
+  }
+
   async findOne(id: number) {
     const inquiry = await this.prisma.inquiry.findFirst({ where: { id, deletedAt: null } });
     if (!inquiry) throw new NotFoundException('문의를 찾을 수 없습니다.');

@@ -10,11 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 import { GalleryResponseDto } from '../../models/gallery-response-dto';
 
 export interface GalleryControllerFindOne$Params {
+  id: number;
 }
 
-export function galleryControllerFindOne(http: HttpClient, rootUrl: string, params?: GalleryControllerFindOne$Params, context?: HttpContext): Observable<StrictHttpResponse<GalleryResponseDto>> {
+export function galleryControllerFindOne(http: HttpClient, rootUrl: string, params: GalleryControllerFindOne$Params, context?: HttpContext): Observable<StrictHttpResponse<GalleryResponseDto>> {
   const rb = new RequestBuilder(rootUrl, galleryControllerFindOne.PATH, 'get');
   if (params) {
+    rb.path('id', params.id, {});
   }
 
   return http.request(

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query } from '@nestjs/common';
-import { ApiBody, ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiBearerAuth, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../libs/decorators/auth.decorator';
 import { OffsetSearchOptionDTO } from '../../libs/dtos/search-option.dto';
 import { ApiPaginatedResponse } from '../../libs/swagger/api-paginated-response.decorator';
@@ -21,7 +21,7 @@ export class InquiryController {
     return this.inquiryService.search(dto);
   }
 
-  @ApiBearerAuth() @ApiOkResponse({ type: InquiryResponseDTO })
+  @ApiBearerAuth() @ApiOkResponse({ type: InquiryResponseDTO }) @ApiParam({ name: 'id', type: Number })
   @Get(':id')
   @Auth()
   findOne(@Param('id', ParseIntPipe) id: number) {
@@ -34,21 +34,21 @@ export class InquiryController {
     return this.inquiryService.create(dto);
   }
 
-  @ApiBearerAuth() @ApiOkResponse({ type: InquiryResponseDTO }) @ApiBody({ type: AnswerInquiryDTO })
+  @ApiBearerAuth() @ApiOkResponse({ type: InquiryResponseDTO }) @ApiBody({ type: AnswerInquiryDTO }) @ApiParam({ name: 'id', type: Number })
   @Patch(':id/answer')
   @Auth()
   answer(@Param('id', ParseIntPipe) id: number, @Body() dto: AnswerInquiryDTO) {
     return this.inquiryService.answer(id, dto);
   }
 
-  @ApiBearerAuth() @ApiOkResponse({ type: InquiryResponseDTO })
+  @ApiBearerAuth() @ApiOkResponse({ type: InquiryResponseDTO }) @ApiParam({ name: 'id', type: Number })
   @Patch(':id/expose')
   @Auth()
   toggleExpose(@Param('id', ParseIntPipe) id: number) {
     return this.inquiryService.toggleExpose(id);
   }
 
-  @ApiBearerAuth() @ApiOkResponse({ type: InquiryResponseDTO })
+  @ApiBearerAuth() @ApiOkResponse({ type: InquiryResponseDTO }) @ApiParam({ name: 'id', type: Number })
   @Delete(':id')
   @Auth()
   remove(@Param('id', ParseIntPipe) id: number) {

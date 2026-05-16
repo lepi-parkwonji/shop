@@ -10,11 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 import { GalleryResponseDto } from '../../models/gallery-response-dto';
 
 export interface GalleryControllerRemove$Params {
+  id: number;
 }
 
-export function galleryControllerRemove(http: HttpClient, rootUrl: string, params?: GalleryControllerRemove$Params, context?: HttpContext): Observable<StrictHttpResponse<GalleryResponseDto>> {
+export function galleryControllerRemove(http: HttpClient, rootUrl: string, params: GalleryControllerRemove$Params, context?: HttpContext): Observable<StrictHttpResponse<GalleryResponseDto>> {
   const rb = new RequestBuilder(rootUrl, galleryControllerRemove.PATH, 'delete');
   if (params) {
+    rb.path('id', params.id, {});
   }
 
   return http.request(

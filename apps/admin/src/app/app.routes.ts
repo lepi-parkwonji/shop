@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { authGuard, authGuardChild } from './guards/auth.guard';
+import { authGuard, authGuardChild } from './auth/auth.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -48,19 +48,40 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'customer/inquiry/:id/answer',
-        loadComponent: () => import('./pages/customer/inquiry/inquiry-form.component').then(m => m.InquiryFormComponent),
+        loadComponent: () => import('./pages/customer/inquiry/inquiry-answer.component').then(m => m.InquiryAnswerComponent),
       },
       {
-        path: 'event/gallery',
-        loadComponent: () => import('./pages/event/gallery/gallery-list.component').then(m => m.GalleryListComponent),
+        path: 'expo/schedule',
+        loadComponent: () => import('./pages/expo/schedule/schedule-list.component').then(m => m.ScheduleListComponent),
       },
       {
-        path: 'event/gallery/new',
-        loadComponent: () => import('./pages/event/gallery/gallery-form.component').then(m => m.GalleryFormComponent),
+        path: 'expo/schedule/new',
+        loadComponent: () => import('./pages/expo/schedule/schedule-form.component').then(m => m.ScheduleFormComponent),
       },
       {
-        path: 'event/gallery/:id/edit',
-        loadComponent: () => import('./pages/event/gallery/gallery-form.component').then(m => m.GalleryFormComponent),
+        path: 'expo/schedule/:id/edit',
+        loadComponent: () => import('./pages/expo/schedule/schedule-form.component').then(m => m.ScheduleFormComponent),
+      },
+      {
+        path: 'expo/exhibitor',
+        loadComponent: () => import('./pages/expo/exhibitor/exhibitor-list.component').then(m => m.ExhibitorListComponent),
+      },
+      {
+        path: 'expo/exhibitor/:id',
+        loadComponent: () => import('./pages/expo/exhibitor/exhibitor-detail.component').then(m => m.ExhibitorDetailComponent),
+      },
+
+      {
+        path: 'expo/gallery',
+        loadComponent: () => import('./pages/expo/gallery/gallery-list.component').then(m => m.GalleryListComponent),
+      },
+      {
+        path: 'expo/gallery/new',
+        loadComponent: () => import('./pages/expo/gallery/gallery-form.component').then(m => m.GalleryFormComponent),
+      },
+      {
+        path: 'expo/gallery/:id/edit',
+        loadComponent: () => import('./pages/expo/gallery/gallery-form.component').then(m => m.GalleryFormComponent),
       },
     ],
   },

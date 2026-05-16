@@ -1,9 +1,18 @@
 import { NgClass, SlicePipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NoticeApiService, NoticeDTO, PaginatedResult } from '../../../services/notice-api.service';
+import {
+  NoticeResponseDto as NoticeDTO,
+  noticeControllerRemove,
+  noticeControllerSearch,
+  noticeControllerToggleExpose,
+  noticeControllerTogglePin,
+} from '@demo-shop/api-client';
+import { PaginatedResult } from '@demo-shop/common';
+import { map } from 'rxjs/operators';
 import { ToastService } from '../../../services/toast.service';
 import { PaginationComponent } from '../../../shared/pagination.component';
 
@@ -13,7 +22,7 @@ import { PaginationComponent } from '../../../shared/pagination.component';
   templateUrl: './notice-list.component.html',
 })
 export class NoticeListComponent {
-  private noticeApi = inject(NoticeApiService);
+  private http = inject(HttpClient);
   private toast = inject(ToastService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
@@ -37,8 +46,8 @@ export class NoticeListComponent {
   }
 
   load() {
-    this.noticeApi.search(this.pageNo(), 10, this.query() || undefined)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    noticeControllerSearch(this.http, '', { pageNo: this.pageNo(), pageSize: 10, query: this.query() || undefined })
+      .pipe(map(r => r.body), takeUntilDestroyed(this.destroyRef))
       .subscribe(response => this.result.set(response));
   }
 
@@ -52,13 +61,15 @@ export class NoticeListComponent {
   changePage(page: number) { this.pageNo.set(page); this.load(); }
 
   rowNumber(index: number): number {
-    const { totalItems, pageSize } = this.result()!.pageInfo;
+    const result = this.result();
+    if (!result) return 0;
+    const { totalItems, pageSize } = result.pageInfo;
     return totalItems - ((this.pageNo() - 1) * pageSize + index);
   }
 
   togglePin(item: NoticeDTO) {
-    this.noticeApi.togglePin(item.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    noticeControllerTogglePin(this.http, '', { id: item.id })
+      .pipe(map(r => r.body), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updated) => {
           this.result.update(current => current ? {
@@ -72,8 +83,8 @@ export class NoticeListComponent {
   }
 
   toggleExpose(item: NoticeDTO) {
-    this.noticeApi.toggleExpose(item.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    noticeControllerToggleExpose(this.http, '', { id: item.id })
+      .pipe(map(r => r.body), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updated) => {
           this.result.update(current => current ? {
@@ -88,8 +99,8 @@ export class NoticeListComponent {
 
   remove(item: NoticeDTO) {
     if (!confirm(`"${item.title}" 공지사항을 삭제하시겠습니까?`)) return;
-    this.noticeApi.remove(item.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    noticeControllerRemove(this.http, '', { id: item.id })
+      .pipe(map(r => r.body), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => { this.toast.success('공지사항이 삭제되었습니다.'); this.load(); },
         error: () => this.toast.error('삭제 중 오류가 발생했습니다.'),

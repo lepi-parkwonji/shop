@@ -10,11 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 import { InquiryResponseDto } from '../../models/inquiry-response-dto';
 
 export interface InquiryControllerFindOne$Params {
+  id: number;
 }
 
-export function inquiryControllerFindOne(http: HttpClient, rootUrl: string, params?: InquiryControllerFindOne$Params, context?: HttpContext): Observable<StrictHttpResponse<InquiryResponseDto>> {
+export function inquiryControllerFindOne(http: HttpClient, rootUrl: string, params: InquiryControllerFindOne$Params, context?: HttpContext): Observable<StrictHttpResponse<InquiryResponseDto>> {
   const rb = new RequestBuilder(rootUrl, inquiryControllerFindOne.PATH, 'get');
   if (params) {
+    rb.path('id', params.id, {});
   }
 
   return http.request(

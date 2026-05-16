@@ -11,12 +11,14 @@ import { AnswerInquiryDto } from '../../models/answer-inquiry-dto';
 import { InquiryResponseDto } from '../../models/inquiry-response-dto';
 
 export interface InquiryControllerAnswer$Params {
+  id: number;
       body: AnswerInquiryDto
 }
 
 export function inquiryControllerAnswer(http: HttpClient, rootUrl: string, params: InquiryControllerAnswer$Params, context?: HttpContext): Observable<StrictHttpResponse<InquiryResponseDto>> {
   const rb = new RequestBuilder(rootUrl, inquiryControllerAnswer.PATH, 'patch');
   if (params) {
+    rb.path('id', params.id, {});
     rb.body(params.body, 'application/json');
   }
 

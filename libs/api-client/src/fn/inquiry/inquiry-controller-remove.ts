@@ -10,11 +10,13 @@ import { RequestBuilder } from '../../request-builder';
 import { InquiryResponseDto } from '../../models/inquiry-response-dto';
 
 export interface InquiryControllerRemove$Params {
+  id: number;
 }
 
-export function inquiryControllerRemove(http: HttpClient, rootUrl: string, params?: InquiryControllerRemove$Params, context?: HttpContext): Observable<StrictHttpResponse<InquiryResponseDto>> {
+export function inquiryControllerRemove(http: HttpClient, rootUrl: string, params: InquiryControllerRemove$Params, context?: HttpContext): Observable<StrictHttpResponse<InquiryResponseDto>> {
   const rb = new RequestBuilder(rootUrl, inquiryControllerRemove.PATH, 'delete');
   if (params) {
+    rb.path('id', params.id, {});
   }
 
   return http.request(

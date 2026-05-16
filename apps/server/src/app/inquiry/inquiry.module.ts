@@ -7,5 +7,6 @@ import { InquiryService } from './inquiry.service';
   imports: [AuthModule],
   controllers: [InquiryController],
   providers: [InquiryService],
+  exports: [InquiryService],
 })
 export class InquiryModule {}

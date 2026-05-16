@@ -1,25 +1,33 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FaqApiService, FaqDTO } from '../../../services/faq-api.service';
+import {
+  FaqResponseDto as FaqDTO,
+  faqControllerCreate,
+  faqControllerFindOne,
+  faqControllerUpdate,
+} from '@demo-shop/api-client';
+import { map } from 'rxjs/operators';
 import { ToastService } from '../../../services/toast.service';
+import { RichEditorComponent } from '../../../shared/rich-editor.component';
 
 const QUESTION_MAX = 200;
-const ANSWER_MAX = 2000;
 
 @Component({
   selector: 'app-faq-form',
-  imports: [FormsModule],
+  imports: [FormsModule, RichEditorComponent],
   templateUrl: './faq-form.component.html',
 })
 export class FaqFormComponent implements OnInit {
-  private faqApi = inject(FaqApiService);
+  @ViewChild(RichEditorComponent) editorRef!: RichEditorComponent;
+
+  private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private toast = inject(ToastService);
 
   readonly QUESTION_MAX = QUESTION_MAX;
-  readonly ANSWER_MAX = ANSWER_MAX;
 
   question = '';
   answer = '';
@@ -41,7 +49,7 @@ export class FaqFormComponent implements OnInit {
       this.answer = state.faq.answer;
     }
 
-    this.faqApi.findOne(this.faqId).subscribe({
+    faqControllerFindOne(this.http, '', { id: this.faqId }).pipe(map(r => r.body)).subscribe({
       next: (faq) => {
         this.question = faq.question;
         this.answer = faq.answer;
@@ -60,18 +68,23 @@ export class FaqFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (!this.question.trim() || !this.answer.trim()) {
-      this.errorMsg.set('질문과 답변을 모두 입력해주세요.');
+    if (!this.question.trim()) {
+      this.errorMsg.set('질문을 입력해주세요.');
+      return;
+    }
+    if (!this.editorRef.getText().trim()) {
+      this.errorMsg.set('답변을 입력해주세요.');
       return;
     }
     this.loading.set(true);
     this.errorMsg.set('');
 
-    const saveRequest = this.isEdit && this.faqId
-      ? this.faqApi.update(this.faqId, { question: this.question, answer: this.answer })
-      : this.faqApi.create({ question: this.question, answer: this.answer });
+    const body = { question: this.question, answer: this.answer };
+    const request$ = this.isEdit && this.faqId
+      ? faqControllerUpdate(this.http, '', { id: this.faqId, body }).pipe(map(r => r.body))
+      : faqControllerCreate(this.http, '', { body }).pipe(map(r => r.body));
 
-    saveRequest.subscribe({
+    request$.subscribe({
       next: () => {
         this.toast.success(this.isEdit ? 'FAQ가 수정되었습니다.' : 'FAQ가 등록되었습니다.');
         this.router.navigate(['/customer/faq']);

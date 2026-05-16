@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AdminStore } from '../../stores/admin.store';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -9,5 +9,5 @@ import { AdminStore } from '../../stores/admin.store';
   templateUrl: './top-bar.component.html',
 })
 export class TopBarComponent {
-  adminStore = inject(AdminStore);
+  authService = inject(AuthService);
 }

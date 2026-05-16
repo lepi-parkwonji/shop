@@ -1,10 +1,18 @@
 import { NgClass, SlicePipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FaqApiService, FaqDTO } from '../../../services/faq-api.service';
-import { PaginatedResult } from '../../../services/notice-api.service';
+import {
+  FaqResponseDto as FaqDTO,
+  faqControllerRemove,
+  faqControllerSearch,
+  faqControllerToggleExpose,
+  faqControllerTogglePin,
+} from '@demo-shop/api-client';
+import { PaginatedResult } from '@demo-shop/common';
+import { map } from 'rxjs/operators';
 import { ToastService } from '../../../services/toast.service';
 import { PaginationComponent } from '../../../shared/pagination.component';
 
@@ -14,7 +22,7 @@ import { PaginationComponent } from '../../../shared/pagination.component';
   templateUrl: './faq-list.component.html',
 })
 export class FaqListComponent {
-  private faqApi = inject(FaqApiService);
+  private http = inject(HttpClient);
   private toast = inject(ToastService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
@@ -38,8 +46,8 @@ export class FaqListComponent {
   }
 
   load() {
-    this.faqApi.search(this.pageNo(), 10, this.query() || undefined)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    faqControllerSearch(this.http, '', { pageNo: this.pageNo(), pageSize: 10, query: this.query() || undefined })
+      .pipe(map(r => r.body), takeUntilDestroyed(this.destroyRef))
       .subscribe(response => this.result.set(response));
   }
 
@@ -53,13 +61,15 @@ export class FaqListComponent {
   changePage(page: number) { this.pageNo.set(page); this.load(); }
 
   rowNumber(index: number): number {
-    const { totalItems, pageSize } = this.result()!.pageInfo;
+    const result = this.result();
+    if (!result) return 0;
+    const { totalItems, pageSize } = result.pageInfo;
     return totalItems - ((this.pageNo() - 1) * pageSize + index);
   }
 
   togglePin(item: FaqDTO) {
-    this.faqApi.togglePin(item.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    faqControllerTogglePin(this.http, '', { id: item.id })
+      .pipe(map(r => r.body), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updated) => {
           this.result.update(current => current ? {
@@ -73,8 +83,8 @@ export class FaqListComponent {
   }
 
   toggleExpose(item: FaqDTO) {
-    this.faqApi.toggleExpose(item.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    faqControllerToggleExpose(this.http, '', { id: item.id })
+      .pipe(map(r => r.body), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updated) => {
           this.result.update(current => current ? {
@@ -89,8 +99,8 @@ export class FaqListComponent {
 
   remove(item: FaqDTO) {
     if (!confirm(`"${item.question}" FAQ를 삭제하시겠습니까?`)) return;
-    this.faqApi.remove(item.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+    faqControllerRemove(this.http, '', { id: item.id })
+      .pipe(map(r => r.body), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => { this.toast.success('FAQ가 삭제되었습니다.'); this.load(); },
         error: () => this.toast.error('삭제 중 오류가 발생했습니다.'),
