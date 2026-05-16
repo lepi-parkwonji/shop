@@ -1,4 +1,5 @@
-import { Component, inject, afterNextRender } from '@angular/core';
+import { Component, inject, afterNextRender, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 
@@ -9,12 +10,13 @@ import { AuthService } from './auth/auth.service';
 })
 export class App {
   private authService = inject(AuthService);
+  private platformId = inject(PLATFORM_ID);
 
   constructor() {
-    // ngOnInit은 SSR 서버에서도 실행되어 localStorage에 접근 불가
-    // afterNextRender는 브라우저에서만 실행 보장
     afterNextRender(() => {
-      this.authService.fetch();
+      if (isPlatformBrowser(this.platformId) && localStorage.getItem('client_accessToken')) {
+        this.authService.fetch();
+      }
     });
   }
 }

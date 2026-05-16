@@ -47,6 +47,7 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('client_accessToken', tokens.accessToken);
       localStorage.setItem('client_refreshToken', tokens.refreshToken);
+      this.fetchPromise = null;
     }
   }
 
@@ -69,10 +70,6 @@ export class AuthService {
       })
       .catch(() => {
         this._user.set(null);
-        if (isPlatformBrowser(this.platformId)) {
-          localStorage.removeItem('client_accessToken');
-          localStorage.removeItem('client_refreshToken');
-        }
         this.fetchPromise = null;
         return false;
       });
