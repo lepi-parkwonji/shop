@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CustomerAuthGuard } from './guards/customer-auth.guard';
 import { CustomerService } from './customer.service';
+import { InquiryService } from '../inquiry/inquiry.service';
+import { CreateInquiryDTO } from '../inquiry/dtos/create-inquiry.dto';
 import type { Request } from 'express';
 
 import { KakaoLoginDto, SigninDto } from './dtos/customer-sign-in.dto';
@@ -12,7 +14,10 @@ import { ApiOkResponse } from '@nestjs/swagger';
 @ApiTags('Client')
 @Controller('client')
 export class CustomerController {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(
+    private readonly customerService: CustomerService,
+    private readonly inquiryService: InquiryService,
+  ) {}
 
   @Get('auth/kakao-url')
   getKakaoLoginUrl(@Query('redirectUri') redirectUri: string) {
@@ -45,5 +50,23 @@ export class CustomerController {
   @Post('logout')
   logout() {
     return { success: true };
+  }
+
+  @UseGuards(CustomerAuthGuard)
+  @Post('inquiries')
+  createInquiry(
+    @Body() dto: CreateInquiryDTO,
+    @Req() req: Request & { user: { sub: number } },
+  ) {
+    return this.inquiryService.create(dto, req.user.sub);
+  }
+
+  @UseGuards(CustomerAuthGuard)
+  @Get('inquiries/:id')
+  findOneInquiry(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request & { user: { sub: number } },
+  ) {
+    return this.inquiryService.findOneByCustomer(id, req.user.sub);
   }
 }

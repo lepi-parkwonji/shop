@@ -8,6 +8,8 @@ export class InquiryResponseDTO {
   @ApiProperty({ type: String, nullable: true }) answer!: string | null;
   @ApiProperty({ type: Boolean }) isAnswered!: boolean;
   @ApiProperty({ type: Boolean }) isExposed!: boolean;
+  @ApiProperty({ type: Boolean }) isSecret!: boolean;
+  @ApiProperty({ type: Number, nullable: true }) customerId!: number | null;
   @ApiProperty({ type: String }) createdAt!: string;
   @ApiProperty({ type: String }) updatedAt!: string;
 }

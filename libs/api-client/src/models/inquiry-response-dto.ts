@@ -6,9 +6,11 @@ export interface InquiryResponseDto {
   authorName: string;
   content: string;
   createdAt: string;
+  customerId: number | null;
   id: number;
   isAnswered: boolean;
   isExposed: boolean;
+  isSecret: boolean;
   title: string;
   updatedAt: string;
 }

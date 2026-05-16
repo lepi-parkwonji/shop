@@ -7,17 +7,16 @@
       <span>문의 등록은 로그인 후 이용 가능합니다. 상단의 <strong>로그인</strong> 버튼을 눌러주세요.</span>
     </div>
   }
+
   <div class="flex gap-2 mb-4">
-    <input
-      name="query"
-      class="input input-bordered flex-1 input-sm min-w-0 max-w-md"
-      type="text"
-      [ngModel]="query()"
-      (ngModelChange)="onQueryChange($event)"
+    <app-search-input
+      class="flex-1 min-w-0"
       placeholder="제목 검색"
-      (keydown.enter)="onSearchImmediate()"
+      [suggestions]="suggestions()"
+      (queryChange)="onQueryChange($event)"
+      (search)="onSearch($event)"
+      (select)="onSelect($event)"
     />
-    <button class="btn btn-outline btn-sm shrink-0" (click)="onSearchImmediate()">검색</button>
     <a class="btn btn-primary btn-sm shrink-0" routerLink="new">문의 등록</a>
   </div>
 
@@ -36,6 +35,9 @@
           <tr class="cursor-pointer hover" [routerLink]="[item.id]">
             <td class="text-sm text-base-content/50 hidden sm:table-cell">{{ item.id }}</td>
             <td>
+              @if (item.isSecret) {
+                <span class="mr-1">🔒</span>
+              }
               <span class="font-medium">{{ item.title }}</span>
               @if (item.isAnswered) {
                 <span class="badge badge-success badge-xs ml-2 text-white">답변완료</span>

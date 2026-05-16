@@ -7,8 +7,8 @@ import { NoticeDetailComponent } from './pages/customer-service/notice/notice-de
 import { FaqListComponent } from './pages/customer-service/faq/faq-list.component';
 import { InquiryListComponent } from './pages/customer-service/inquiry/inquiry-list.component';
 import { InquiryFormComponent } from './pages/customer-service/inquiry/inquiry-form.component';
+import { InquiryDetailComponent } from './pages/customer-service/inquiry/inquiry-detail.component';
 import { AuthCallbackComponent } from './pages/auth/callback/auth-callback.component';
-import { authGuard } from './auth/auth.guard';
 
 export const appRoutes: Route[] = [
   { path: 'auth/callback', component: AuthCallbackComponent },
@@ -26,7 +26,8 @@ export const appRoutes: Route[] = [
           { path: 'notice/:id', component: NoticeDetailComponent },
           { path: 'faq', component: FaqListComponent },
           { path: 'inquiry', component: InquiryListComponent },
-          { path: 'inquiry/new', component: InquiryFormComponent, canActivate: [authGuard] },
+          { path: 'inquiry/new', component: InquiryFormComponent },
+          { path: 'inquiry/:id', component: InquiryDetailComponent },
         ],
       },
     ],
