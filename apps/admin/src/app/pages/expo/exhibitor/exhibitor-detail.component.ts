@@ -132,6 +132,31 @@ export class ExhibitorDetailComponent implements OnInit {
     this.totalFee = fee;
   }
 
+  formatBusinessRegNumber(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const digits = input.value.replace(/\D/g, '').slice(0, 10);
+    let v = digits;
+    if (digits.length > 5) v = `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`;
+    else if (digits.length > 3) v = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    this.businessRegNumber = v;
+    input.value = v;
+  }
+
+  formatContact(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const digits = input.value.replace(/\D/g, '').slice(0, 11);
+    let v = digits;
+    if (digits.startsWith('02')) {
+      if (digits.length > 6) v = `${digits.slice(0, 2)}-${digits.slice(2, digits.length - 4)}-${digits.slice(-4)}`;
+      else if (digits.length > 2) v = `${digits.slice(0, 2)}-${digits.slice(2)}`;
+    } else {
+      if (digits.length > 7) v = `${digits.slice(0, 3)}-${digits.slice(3, digits.length - 4)}-${digits.slice(-4)}`;
+      else if (digits.length > 3) v = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    }
+    this.contact = v;
+    input.value = v;
+  }
+
   save() {
     if (!this.companyName.trim()) { this.errorMsg.set('업체명을 입력해주세요.'); return; }
     if (!this.scheduleId) { this.errorMsg.set('참가 박람회를 선택해주세요.'); return; }
