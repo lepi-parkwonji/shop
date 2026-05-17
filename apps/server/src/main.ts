@@ -4,8 +4,14 @@ import { AppModule } from './app/app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
+import { mkdirSync } from 'fs';
 
 async function bootstrap() {
+  // 업로드 디렉터리 자동 생성
+  for (const dir of ['uploads/content', 'uploads/gallery']) {
+    mkdirSync(join(process.cwd(), dir), { recursive: true });
+  }
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
   const globalPrefix = 'api';

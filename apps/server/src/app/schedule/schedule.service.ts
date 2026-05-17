@@ -82,4 +82,11 @@ export class ScheduleService {
     const schedule = await this.findOne(id);
     return this.prisma.schedule.update({ where: { id }, data: { isExposed: !schedule.isExposed } });
   }
+
+  async searchPublic(): Promise<any[]> {
+    return this.prisma.schedule.findMany({
+      where: { deletedAt: null, status: { in: ['PENDING', 'ONGOING'] } },
+      orderBy: { startTime: 'asc' },
+    });
+  }
 }
