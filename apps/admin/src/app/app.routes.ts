@@ -70,6 +70,18 @@ export const appRoutes: Route[] = [
         path: 'expo/exhibitor/:id',
         loadComponent: () => import('./pages/expo/exhibitor/exhibitor-detail.component').then(m => m.ExhibitorDetailComponent),
       },
+      {
+        path: 'expo/registration',
+        loadComponent: () => import('./pages/expo/registration/registration-list.component').then(m => m.RegistrationListComponent),
+      },
+      {
+        path: 'expo/registration/new',
+        loadComponent: () => import('./pages/expo/registration/registration-form.component').then(m => m.RegistrationFormComponent),
+      },
+      {
+        path: 'expo/registration/:id/edit',
+        loadComponent: () => import('./pages/expo/registration/registration-form.component').then(m => m.RegistrationFormComponent),
+      },
 
       {
         path: 'expo/gallery',
@@ -82,6 +94,30 @@ export const appRoutes: Route[] = [
       {
         path: 'expo/gallery/:id/edit',
         loadComponent: () => import('./pages/expo/gallery/gallery-form.component').then(m => m.GalleryFormComponent),
+      },
+      {
+        path: 'expo/press',
+        loadComponent: () => import('./pages/expo/press/press-list.component').then(m => m.PressListComponent),
+      },
+      {
+        path: 'expo/press/new',
+        loadComponent: () => import('./pages/expo/press/press-form.component').then(m => m.PressFormComponent),
+      },
+      {
+        path: 'expo/press/:id/edit',
+        loadComponent: () => import('./pages/expo/press/press-form.component').then(m => m.PressFormComponent),
+      },
+      {
+        path: 'site/settings',
+        loadComponent: () => import('./pages/site/site-settings.component').then(m => m.SiteSettingsComponent),
+      },
+      {
+        path: 'site/pages',
+        loadComponent: () => import('./pages/site/site-pages-list.component').then(m => m.SitePagesListComponent),
+      },
+      {
+        path: 'site/pages/:slug/edit',
+        loadComponent: () => import('./pages/site/site-page-form.component').then(m => m.SitePageFormComponent),
       },
     ],
   },
