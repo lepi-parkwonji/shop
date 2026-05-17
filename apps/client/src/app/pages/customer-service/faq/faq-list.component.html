@@ -23,9 +23,7 @@
               }
               {{ item.question }}
             </div>
-            <div class="collapse-content text-base-content/70 leading-relaxed">
-              <p class="whitespace-pre-wrap">{{ item.answer }}</p>
-            </div>
+            <div class="collapse-content text-base-content/70 leading-relaxed prose prose-sm max-w-none" [innerHTML]="item.answer"></div>
           </div>
         }
       </div>
