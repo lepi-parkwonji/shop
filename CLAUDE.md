@@ -27,3 +27,8 @@
 - 초기 번들: ~343 KB (transfer ~83 KB)
 - Tiptap (gallery-form lazy chunk): ~379 KB (transfer ~103 KB) — `/event/gallery/new`, `/event/gallery/:id/edit` 진입 시에만 로드
 - 각 페이지 컴포넌트: 2–7 KB (모두 `loadComponent`로 lazy 분리)
+
+# component 는 HTML 분리하기
+# DB 스키마 수정 사항과 확인할 때 generate 까지 자동 실행
+# Read 작업은 내 승인 없이 바로 진행
+# 서버, admin, client 빌드는 테스트도 묻지 않고 자동 진행하기

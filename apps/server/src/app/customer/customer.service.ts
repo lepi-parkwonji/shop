@@ -4,9 +4,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { TokensDTO } from '../../libs/dtos/tokens.dto';
 import axios from 'axios';
 import * as bcrypt from 'bcryptjs';
-
-const ACCESS_TOKEN_EXPIRES_IN = '1h';
-const REFRESH_TOKEN_EXPIRES_IN = '7d';
+import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '../auth/auth.constants';
 
 @Injectable()
 export class CustomerService {
@@ -61,7 +59,6 @@ export class CustomerService {
       };
     } catch (error: any) {
       const errorData = error.response?.data;
-      console.error('Kakao Login Error:', errorData ?? error.message);
       const errorMsg = errorData?.error_description || errorData?.msg || '카카오 로그인에 실패했습니다.';
       throw new UnauthorizedException(errorMsg);
     }

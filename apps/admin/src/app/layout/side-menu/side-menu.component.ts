@@ -8,6 +8,12 @@ interface Menu {
 
 const MENUS: Menu[] = [
   {
+    name: '메인 홈 관리',
+    children: [
+      { name: '배너 관리', href: '/home/banners' },
+    ],
+  },
+  {
     name: '고객센터 관리',
     children: [
       { name: '공지사항', href: '/customer/notice' },
@@ -18,8 +24,9 @@ const MENUS: Menu[] = [
   {
     name: '박람회 운영 관리',
     children: [
-      { name: '박람회 관리', href: '/expo/schedule' },
+      { name: '박람회 정보 관리', href: '/expo/schedule' },
       { name: '참가 업체 관리', href: '/expo/exhibitor' },
+      { name: '사전 등록 관리', href: '/expo/registration' },
     ],
   },
 
@@ -27,7 +34,14 @@ const MENUS: Menu[] = [
     name: '갤러리/보도자료',
     children: [
       { name: '갤러리 관리', href: '/expo/gallery' },
-      { name: '보도자료 관리', href: '/expo/press' },    
+      { name: '보도자료 관리', href: '/expo/press' },
+    ],
+  },
+  {
+    name: '사이트 관리',
+    children: [
+      { name: '기본 정보', href: '/site/settings' },
+      { name: '약관/안내 페이지', href: '/site/pages' },
     ],
   },
 ];

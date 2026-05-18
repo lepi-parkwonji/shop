@@ -1,4 +1,10 @@
-<app-top-bar />
-<main class="min-h-screen bg-base-200">
-  <router-outlet />
-</main>
+<div class="min-h-screen flex flex-col">
+  <app-top-bar />
+  <div class="pt-16">
+    <app-wide-banner />
+  </div>
+  <main class="flex-1 bg-base-200">
+    <router-outlet />
+  </main>
+  <app-footer />
+</div>

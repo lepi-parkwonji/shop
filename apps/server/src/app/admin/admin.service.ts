@@ -5,9 +5,7 @@ import { TokensDTO } from '../../libs/dtos/tokens.dto';
 import { AuthUtil } from '../auth/auth.util';
 import { AdminDTO } from './dtos/admin.dto';
 import { AdminSignInDTO } from './dtos/admin-sign-in.dto';
-
-const ACCESS_TOKEN_EXPIRES_IN = '1h';
-const REFRESH_TOKEN_EXPIRES_IN = '7d';
+import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '../auth/auth.constants';
 
 @Injectable()
 export class AdminService {
