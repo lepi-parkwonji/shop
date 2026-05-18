@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from '@demo-shop/ui';
 import { RichEditorComponent } from '../../shared/rich-editor.component';
 
 @Component({
@@ -31,7 +31,12 @@ export class SitePageFormComponent implements OnInit {
 
     this.loading.set(true);
     this.http.get<{ title: string; content: string }>(`/api/site/pages/${this.slug}`).subscribe({
-      next: data => { this.title = data.title; this.content = data.content; this.loading.set(false); },
+      next: data => {
+        this.title = data.title;
+        this.content = data.content;
+        this.editorRef?.editor.commands.setContent(data.content, { emitUpdate: false });
+        this.loading.set(false);
+      },
       error: () => this.loading.set(false),
     });
   }
@@ -44,7 +49,7 @@ export class SitePageFormComponent implements OnInit {
     if (!this.title.trim()) { this.toast.error('제목을 입력해주세요.'); return; }
     this.saving.set(true);
     this.http.put(`/api/site/pages/${this.slug}`, { title: this.title, content: this.content }).subscribe({
-      next: () => { this.toast.success('저장되었습니다.'); this.saving.set(false); },
+      next: () => { this.toast.success('저장되었습니다.'); this.saving.set(false); this.navigateBack(); },
       error: () => { this.toast.error('저장에 실패했습니다.'); this.saving.set(false); },
     });
   }

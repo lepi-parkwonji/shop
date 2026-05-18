@@ -21,7 +21,7 @@ export class UploadController {
     limits: { fileSize: 10 * 1024 * 1024 },
   }))
   async uploadImage(@UploadedFile() file: Express.Multer.File) {
-    const url = await this.supabase.uploadFile('content', file.originalname, file.buffer, file.mimetype);
+    const url = await this.supabase.uploadFile('gallery', file.originalname, file.buffer, file.mimetype);
     return { url };
   }
 
@@ -35,7 +35,7 @@ export class UploadController {
     limits: { fileSize: 200 * 1024 * 1024 },
   }))
   async uploadVideo(@UploadedFile() file: Express.Multer.File) {
-    const url = await this.supabase.uploadFile('content', file.originalname, file.buffer, file.mimetype);
+    const url = await this.supabase.uploadFile('gallery', file.originalname, file.buffer, file.mimetype);
     return { url };
   }
 }

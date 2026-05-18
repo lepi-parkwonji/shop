@@ -14,6 +14,18 @@ export const appRoutes: Route[] = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
+        path: 'home/banners',
+        loadComponent: () => import('./pages/home/banner-list.component').then(m => m.BannerListComponent),
+      },
+      {
+        path: 'home/banners/new',
+        loadComponent: () => import('./pages/home/banner-form.component').then(m => m.BannerFormComponent),
+      },
+      {
+        path: 'home/banners/:id/edit',
+        loadComponent: () => import('./pages/home/banner-form.component').then(m => m.BannerFormComponent),
+      },
+      {
         path: 'dashboard',
         data: { title: '대시보드' },
         loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),

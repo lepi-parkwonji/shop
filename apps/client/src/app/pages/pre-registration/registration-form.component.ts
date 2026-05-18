@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ScheduleDTO, RegistrationDTO, PublicApiService } from '../../services/public-api.service';
+import { formatPhoneNumber, extractErrorMessage } from '@demo-shop/common';
 
 @Component({
   selector: 'app-registration-form',
@@ -19,6 +20,11 @@ export class RegistrationFormComponent {
   loading = signal(false);
   errorMsg = signal('');
   result = signal<RegistrationDTO | null>(null);
+
+  privacyModal = signal(false);
+  marketingModal = signal(false);
+  privacyPage = signal<{ title: string; content: string } | null>(null);
+  marketingPage = signal<{ title: string; content: string } | null>(null);
 
   name = '';
   contact = '';
@@ -45,20 +51,29 @@ export class RegistrationFormComponent {
     });
   }
 
-  onContactInput(event: Event) {
-    const raw = (event.target as HTMLInputElement).value.replace(/\D/g, '').slice(0, 11);
-    let formatted = raw;
-    if (raw.startsWith('02')) {
-      if (raw.length <= 6) formatted = raw.replace(/(\d{2})(\d+)/, '$1-$2');
-      else if (raw.length <= 9) formatted = raw.replace(/(\d{2})(\d{3,4})(\d+)/, '$1-$2-$3');
-      else formatted = raw.replace(/(\d{2})(\d{4})(\d+)/, '$1-$2-$3');
-    } else {
-      if (raw.length <= 7) formatted = raw.replace(/(\d{3})(\d+)/, '$1-$2');
-      else if (raw.length <= 10) formatted = raw.replace(/(\d{3})(\d{3})(\d+)/, '$1-$2-$3');
-      else formatted = raw.replace(/(\d{3})(\d{4})(\d+)/, '$1-$2-$3');
+  openPrivacyModal() {
+    this.privacyModal.set(true);
+    if (!this.privacyPage()) {
+      this.api.getSitePage('privacy')
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({ next: data => this.privacyPage.set(data), error: () => this.privacyPage.set({ title: '개인정보 수집 및 이용 동의', content: '' }) });
     }
-    this.contact = formatted;
-    (event.target as HTMLInputElement).value = formatted;
+  }
+
+  openMarketingModal() {
+    this.marketingModal.set(true);
+    if (!this.marketingPage()) {
+      this.api.getSitePage('marketing-consent')
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({ next: data => this.marketingPage.set(data), error: () => this.marketingPage.set({ title: '마케팅 정보 수신 동의', content: '' }) });
+    }
+  }
+
+  onContactInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const v = formatPhoneNumber(input.value);
+    this.contact = v;
+    input.value = v;
   }
 
   onSubmit() {
@@ -79,8 +94,7 @@ export class RegistrationFormComponent {
       .subscribe({
         next: data => { this.result.set(data); this.loading.set(false); },
         error: err => {
-          const msg = err?.error?.message;
-          this.errorMsg.set(Array.isArray(msg) ? msg[0] : (msg || '등록에 실패했습니다. 다시 시도해주세요.'));
+          this.errorMsg.set(extractErrorMessage(err, '등록에 실패했습니다. 다시 시도해주세요.'));
           this.loading.set(false);
         },
       });

@@ -7,6 +7,7 @@ import {
   INQUIRY_TITLE_MIN, INQUIRY_TITLE_MAX,
   INQUIRY_CONTENT_MIN, INQUIRY_CONTENT_MAX,
   INQUIRY_AUTHOR_NAME_MAX,
+  extractErrorMessage,
 } from '@demo-shop/common';
 
 @Component({
@@ -67,8 +68,7 @@ export class InquiryFormComponent implements OnInit {
         this.router.navigate(['/customer-service/inquiry']);
       },
       error: (err) => {
-        const msg = err?.error?.message;
-        this.errorMsg.set(Array.isArray(msg) ? msg[0] : (msg || '등록에 실패했습니다. 다시 시도해주세요.'));
+        this.errorMsg.set(extractErrorMessage(err, '등록에 실패했습니다. 다시 시도해주세요.'));
         this.loading.set(false);
       },
     });

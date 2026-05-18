@@ -11,7 +11,7 @@ import {
   scheduleControllerSearch,
 } from '@demo-shop/api-client';
 import { map } from 'rxjs/operators';
-import { ToastService } from '../../../services/toast.service';
+import { ToastService } from '@demo-shop/ui';
 import { RichEditorComponent } from '../../../shared/rich-editor.component';
 
 const TITLE_MAX = 100;

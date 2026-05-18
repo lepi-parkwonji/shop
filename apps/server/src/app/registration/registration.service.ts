@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma } from '@generated/prisma';
+import { Prisma, Registration } from '@generated/prisma';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OffsetPaginationDTO } from '../../libs/dtos/offset-pagination.dto';
 import { CreateRegistrationDTO } from './dtos/create-registration.dto';
@@ -24,7 +24,7 @@ export class RegistrationService {
     };
   }
 
-  async search(dto: RegistrationSearchOptionDTO): Promise<OffsetPaginationDTO<any>> {
+  async search(dto: RegistrationSearchOptionDTO): Promise<OffsetPaginationDTO<Registration>> {
     const { pageNo, pageSize } = dto;
     const where = this.buildWhere(dto);
     const skip = (pageNo - 1) * pageSize;

@@ -8,6 +8,12 @@ interface Menu {
 
 const MENUS: Menu[] = [
   {
+    name: '메인 홈 관리',
+    children: [
+      { name: '배너 관리', href: '/home/banners' },
+    ],
+  },
+  {
     name: '고객센터 관리',
     children: [
       { name: '공지사항', href: '/customer/notice' },

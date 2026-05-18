@@ -8,7 +8,7 @@ import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
 import StarterKit from '@tiptap/starter-kit';
 import { TiptapEditorDirective } from 'ngx-tiptap';
-import { ToastService } from '../services/toast.service';
+import { ToastService } from '@demo-shop/ui';
 
 @Component({
   selector: 'app-rich-editor',

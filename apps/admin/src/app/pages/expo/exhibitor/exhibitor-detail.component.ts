@@ -12,7 +12,8 @@ import {
   ScheduleResponseDto as ScheduleDTO,
 } from '@demo-shop/api-client';
 import { map } from 'rxjs/operators';
-import { ToastService } from '../../../services/toast.service';
+import { ToastService } from '@demo-shop/ui';
+import { formatPhoneNumber } from '@demo-shop/common';
 
 const BOOTH_PRICES: Record<string, number> = {
   SPACE_ONLY: 1000000,
@@ -144,15 +145,7 @@ export class ExhibitorDetailComponent implements OnInit {
 
   formatContact(event: Event) {
     const input = event.target as HTMLInputElement;
-    const digits = input.value.replace(/\D/g, '').slice(0, 11);
-    let v = digits;
-    if (digits.startsWith('02')) {
-      if (digits.length > 6) v = `${digits.slice(0, 2)}-${digits.slice(2, digits.length - 4)}-${digits.slice(-4)}`;
-      else if (digits.length > 2) v = `${digits.slice(0, 2)}-${digits.slice(2)}`;
-    } else {
-      if (digits.length > 7) v = `${digits.slice(0, 3)}-${digits.slice(3, digits.length - 4)}-${digits.slice(-4)}`;
-      else if (digits.length > 3) v = `${digits.slice(0, 3)}-${digits.slice(3)}`;
-    }
+    const v = formatPhoneNumber(input.value);
     this.contact = v;
     input.value = v;
   }
@@ -191,8 +184,7 @@ export class ExhibitorDetailComponent implements OnInit {
         this.toast.success(this.isNew() ? '등록되었습니다.' : '저장되었습니다.');
         this.router.navigate(['/expo/exhibitor']);
       },
-      error: (error) => {
-        console.error('[exhibitor save]', error);
+      error: () => {
         this.errorMsg.set('저장 중 오류가 발생했습니다.');
         this.loading.set(false);
       },

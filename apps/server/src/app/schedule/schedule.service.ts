@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, ScheduleStatus } from '@generated/prisma';
+import { Prisma, Schedule, ScheduleStatus } from '@generated/prisma';
 import { PrismaService } from '../../prisma/prisma.service';
 import { OffsetPaginationDTO } from '../../libs/dtos/offset-pagination.dto';
 import { CreateScheduleDTO } from './dtos/create-schedule.dto';
@@ -33,7 +33,7 @@ export class ScheduleService {
     };
   }
 
-  async search(options: ScheduleSearchOptions): Promise<OffsetPaginationDTO<any>> {
+  async search(options: ScheduleSearchOptions): Promise<OffsetPaginationDTO<Schedule>> {
     const { pageNo, pageSize } = options;
     const where = this.buildWhere(options);
     const skip = (pageNo - 1) * pageSize;
@@ -83,7 +83,7 @@ export class ScheduleService {
     return this.prisma.schedule.update({ where: { id }, data: { isExposed: !schedule.isExposed } });
   }
 
-  async searchPublic(): Promise<any[]> {
+  async searchPublic(): Promise<Schedule[]> {
     return this.prisma.schedule.findMany({
       where: { deletedAt: null, status: { in: ['PENDING', 'ONGOING'] } },
       orderBy: { startTime: 'asc' },

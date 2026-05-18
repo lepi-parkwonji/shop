@@ -61,4 +61,10 @@ export class PublicApiService {
   getSitePage(slug: string) {
     return this.http.get<{ slug: string; title: string; content: string }>(`/api/public/site-pages/${slug}`);
   }
+
+  getBanners(type: 'HERO' | 'INTRO' | 'SPONSOR' | 'WIDE') {
+    return this.http.get<{ id: number; type: string; title: string; subtitle: string; imageUrl: string; videoUrl: string; linkUrl: string; sortOrder: number }[]>(
+      '/api/public/banners', { params: { type } }
+    );
+  }
 }

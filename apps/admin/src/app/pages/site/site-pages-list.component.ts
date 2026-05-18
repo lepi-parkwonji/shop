@@ -6,9 +6,10 @@ import { Router } from '@angular/router';
 interface SitePage { id: number; slug: string; title: string; updatedAt: string; }
 
 const PRESET_PAGES = [
-  { slug: 'terms',         title: '이용약관' },
-  { slug: 'privacy',       title: '개인정보처리방침' },
-  { slug: 'visitor-guide', title: '관람 안내' },
+  { slug: 'terms',              title: '이용약관' },
+  { slug: 'privacy',            title: '개인정보처리방침' },
+  { slug: 'marketing-consent',  title: '마케팅 활용 동의' },
+  { slug: 'visitor-guide',      title: '관람 안내' },
 ];
 
 @Component({

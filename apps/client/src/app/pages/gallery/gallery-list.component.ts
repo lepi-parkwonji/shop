@@ -2,7 +2,7 @@ import { SlicePipe } from '@angular/common';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GalleryDTO, PaginatedResult, PublicApiService } from '../../services/public-api.service';
-import { PaginationComponent } from '../../shared/pagination.component';
+import { PaginationComponent } from '@demo-shop/ui';
 
 @Component({
   selector: 'app-gallery-list',

@@ -15,6 +15,7 @@ import { CustomerModule } from './customer/customer.module';
 import { UploadModule } from './upload/upload.module';
 import { RegistrationModule } from './registration/registration.module';
 import { SiteModule } from './site/site.module';
+import { BannerModule } from './banner/banner.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -39,6 +40,7 @@ import { AppService } from './app.service';
     UploadModule,
     RegistrationModule,
     SiteModule,
+    BannerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

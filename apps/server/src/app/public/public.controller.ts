@@ -10,6 +10,8 @@ import { CreateRegistrationDTO } from '../registration/dtos/create-registration.
 import { UpdateRegistrationDTO } from '../registration/dtos/update-registration.dto';
 import { ScheduleService } from '../schedule/schedule.service';
 import { SiteService } from '../site/site.service';
+import { BannerService } from '../banner/banner.service';
+import { BannerType } from '../banner/dtos/banner.dto';
 
 @Controller('public')
 export class PublicController {
@@ -21,6 +23,7 @@ export class PublicController {
     private registrationService: RegistrationService,
     private scheduleService: ScheduleService,
     private siteService: SiteService,
+    private bannerService: BannerService,
   ) {}
 
   @Get('notices')
@@ -91,5 +94,10 @@ export class PublicController {
   @Get('site-pages/:slug')
   getSitePage(@Param('slug') slug: string) {
     return this.siteService.getPage(slug);
+  }
+
+  @Get('banners')
+  getBanners(@Query('type') type: BannerType) {
+    return this.bannerService.findPublic(type);
   }
 }
